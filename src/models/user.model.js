@@ -29,4 +29,19 @@ module.exports = {
 				}
 			);
 		}),
+	insertSeller: (body) =>
+		new Promise((resolve, reject) => {
+			const { id, userId, storeName } = body;
+
+			db.query(
+				"INSERT INTO store (id, user_id, store_name) VALUES ($1, $2, $3)",
+				[id, userId, storeName],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 };

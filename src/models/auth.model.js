@@ -1,17 +1,18 @@
 const db = require("../config/db");
 
 module.exports = {
-	registerBuyer: (body) => new Promise((resolve, reject) => {
+	register: (body) => new Promise((resolve, reject) => {
 		const {
 			id,
 			name,
 			email,
 			password,
+			level,
 		} = body;
 
 		db.query(
 			"INSERT INTO users (id, name, email, password, level, is_verified) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
-			[id, name, email, password, 3, false],
+			[id, name, email, password, level, false],
 			(error, result) => {
 				if (error) {
 					reject(error);
