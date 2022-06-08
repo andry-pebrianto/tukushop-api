@@ -13,14 +13,16 @@ const socketController = require("./src/socket");
 
 const app = express();
 app.use(cors());
-app.use(helmet({
-	crossOriginResourcePolicy: false,
-}));
+app.use(
+	helmet({
+		crossOriginResourcePolicy: false,
+	})
+);
 app.use(xss());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-	res.json({message: "Hello World"});
+	res.json({ message: "Hello World" });
 });
 app.use(express.static("public"));
 
@@ -32,8 +34,8 @@ const APP_PORT = process.env.PORT || 4000;
 const server = http.createServer(app);
 const io = socketIo(server, {
 	cors: {
-		origin: "*"
-	}
+		origin: "*",
+	},
 });
 io.on("connection", (socket) => {
 	console.log("new user connected");
