@@ -10,6 +10,7 @@ const http = require("http");
 const socketController = require("./src/socket");
 
 // route here
+const categoryRoute = require("./src/routers/category.route");
 
 const app = express();
 app.use(cors());
@@ -28,6 +29,7 @@ app.use(express.static("public"));
 
 // auth route
 app.use(require("./src/routers/auth.route"));
+app.use(categoryRoute);
 
 const APP_PORT = process.env.PORT || 4000;
 
@@ -38,9 +40,9 @@ const io = socketIo(server, {
 	},
 });
 io.on("connection", (socket) => {
-	console.log("new user connected");
-	socketController(io, socket);
+  console.log("new user connected");
+  socketController(io, socket);
 });
 server.listen(APP_PORT, () => {
-	console.log(`Service running on port ${APP_PORT}`);
+  console.log(`Service running on port ${APP_PORT}`);
 });
