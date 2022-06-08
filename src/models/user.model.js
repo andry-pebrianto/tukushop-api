@@ -44,4 +44,34 @@ module.exports = {
 				}
 			);
 		}),
+	updateUser: (id, body) =>
+		new Promise((resolve, reject) => {
+			const { name, photo } = body;
+
+			db.query(
+				"UPDATE users SET name=$1, photo=$2 WHERE id=$3",
+				[name, photo, id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
+	updateProfileBuyer: (id, body) =>
+		new Promise((resolve, reject) => {
+			const { phone, gender, birth } = body;
+
+			db.query(
+				"UPDATE profile SET phone=$1, gender=$2, birth=$3 WHERE user_id=$4",
+				[phone, gender, birth, id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 };

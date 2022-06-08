@@ -28,6 +28,7 @@ app.use(express.static("public"));
 
 // auth route
 app.use(require("./src/routers/auth.route"));
+app.use(require("./src/routers/user.route"));
 
 const APP_PORT = process.env.PORT || 4000;
 
