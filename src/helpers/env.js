@@ -7,6 +7,7 @@ module.exports = {
 	DB_PORT: process.env.DB_PORT,
 	SERVER_PORT: process.env.PORT,
 	API_URL: process.env.API_URL,
+	CLIENT_URL: process.env.CLIENT_URL,
 	JWT_SECRET: process.env.JWT_SECRET,
 	EMAIL_FROM: process.env.EMAIL_FROM,
 	EMAIL_USER: process.env.EMAIL_USER,
