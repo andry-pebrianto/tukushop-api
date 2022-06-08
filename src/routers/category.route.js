@@ -13,30 +13,52 @@ const {
 
 // import middlewares
 const categoryUpload = require("../middleware/categoryUpload");
-const validation = require("../middleware/validation");
-
+// const validation = require("../middleware/validation");
+const runValidation = require("../middleware/runValidation");
+const jwtAuth = require("../middleware/jwtAuth");
+const {
+  onlyAdmin,
+  onlyBuyer,
+  onlySeller,
+  buyerOrSeller,
+} = require("../middleware/authorization");
 // import validation rules
 const {
   createValidation,
   updateValidation,
   statusValidation,
-} = require("../validation/category.validation");
+} = require("../validations/category.validation");
 
 const router = express.Router();
 
 router
-  .get("/category", allCategory) // get all category admin only
-  .get("/category-active", allCategoryActive) // get category activ only buyer seller
-  .get("/category/:id", detailCategory) // get detail category admin only
-  .post("/category", categoryUpload, createValidation, validation, addCategory) // add category admin only
+  .get("/category", jwtAuth, onlyAdmin, allCategory) // get all category admin only
+  .get("/category-active", jwtAuth, buyerOrSeller, allCategoryActive) // get category activ only buyer seller
+  .get("/category/:id", jwtAuth, onlyAdmin, detailCategory) // get detail category admin only
+  .post(
+    "/category",
+    jwtAuth,
+    onlyAdmin,
+    categoryUpload,
+    createValidation,
+    runValidation,
+    addCategory
+  ) // add category admin only
   .put(
     "/category/:id",
     categoryUpload,
     updateValidation,
-    validation,
+    runValidation,
     updateCategory
   ) // update category admin only
-  .put("/category-status/:id", statusValidation, validation, statusCategory) // admin only
-  .delete("/category/:id", deleteCategory);
+  .put(
+    "/category-status/:id",
+    jwtAuth,
+    onlyAdmin,
+    statusValidation,
+    runValidation,
+    statusCategory
+  ) // admin only
+  .delete("/category/:id", jwtAuth, onlyAdmin, deleteCategory); // delete category only admin
 
 module.exports = router;
