@@ -24,6 +24,9 @@ app.get("/", (req, res) => {
 });
 app.use(express.static("public"));
 
+// auth route
+app.use(require("./src/routers/auth.route"));
+
 const APP_PORT = process.env.PORT || 4000;
 
 const server = http.createServer(app);
