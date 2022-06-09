@@ -56,6 +56,6 @@ router
     runValidation,
     statusProductBrand
   ) // update status product brand admin only
-  .delete("/product-brand/:id", jwtAuth, onlyAdmin, deleteProductBrand);
+  .delete("/product-brand/:id", jwtAuth, onlyAdmin, deleteProductBrand); // delete product brand admin only
 
 module.exports = router;
