@@ -74,4 +74,48 @@ module.exports = {
 				}
 			);
 		}),
+	updateProfileSeller: (id, body) =>
+		new Promise((resolve, reject) => {
+			const { storeName, storePhone, storeDescription } = body;
+
+			db.query(
+				"UPDATE store SET store_name=$1, store_phone=$2, store_description=$3 WHERE user_id=$4",
+				[storeName, storePhone, storeDescription, id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
+	selectAllBuyer: (paging, search, sort) =>
+		new Promise((resolve, reject) => {
+			let sql =
+        "SELECT users.id, users.name, users.level, users.photo, profile.birth, profile.phone, profile.gender FROM users INNER JOIN profile ON profile.user_id = users.id WHERE level=3 AND LOWER(name) LIKE '%'||LOWER($1)||'%'";
+			if (sort.trim() === "email") {
+				sql += "ORDER BY email ";
+			} else if (sort.trim() === "birth") {
+				sql += "ORDER BY birth ";
+			} else {
+				sql += "ORDER BY name ";
+			}
+			sql += `LIMIT ${paging.limit} OFFSET ${paging.offset}`;
+
+			db.query(sql, [search], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	countBuyer: () =>
+		new Promise((resolve, reject) => {
+			db.query("SELECT COUNT(*) FROM users WHERE level=3", (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
 };
