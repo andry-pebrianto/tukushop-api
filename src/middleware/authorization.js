@@ -120,4 +120,27 @@ module.exports = {
 			});
 		}
 	},
+	buyerOrSeller: async (req, res, next) => {
+		try {
+			const user = await userModel.findBy("id", req.APP_DATA.tokenDecoded.id);
+
+			if (user.rows[0].level === 3 || user.rows[0].level === 2) {
+				next();
+			} else {
+				failed(res, {
+					code: 401,
+					status: "failed",
+					message: "Unauthorized",
+					error: "You do not have access",
+				});
+			}
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "failed",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
 };
