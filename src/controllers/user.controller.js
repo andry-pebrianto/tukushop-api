@@ -9,7 +9,8 @@ module.exports = {
 	getListBuyer: async (req, res) => {
 		try {
 			const { page, limit, search = "", sort="" } = req.query;
-			const count = await userModel.countBuyer();
+			const count = await userModel.countBuyer(search);
+			console.log(count.rows);
 			const paging = createPagination(count.rows[0].count, page, limit);
 			const users = await userModel.selectAllBuyer(paging, search, sort);
 
@@ -18,6 +19,29 @@ module.exports = {
 				status: "success",
 				data: users.rows,
 				message: "Select List Buyer Success",
+				pagination: paging.response,
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	getListSeller: async (req, res) => {
+		try {
+			const { page, limit, search = "", sort="" } = req.query;
+			const count = await userModel.countSeller(search);
+			const paging = createPagination(count.rows[0].count, page, limit);
+			const users = await userModel.selectAllSeller(paging, search, sort);
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: users.rows,
+				message: "Select List Seller Success",
 				pagination: paging.response,
 			});
 		} catch (error) {
