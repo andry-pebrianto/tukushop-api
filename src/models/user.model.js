@@ -153,4 +153,30 @@ module.exports = {
 				resolve(result);
 			});
 		}),
+	getDetailBuyer: (id) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				"SELECT users.id, users.name, users.photo, users.email, profile.phone, profile.gender, profile.birth FROM users INNER JOIN profile ON profile.user_id = users.id WHERE users.id=$1",
+				[id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
+	getDetailSeller: (id) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				"SELECT users.id, users.name, users.photo, users.email, store.store_name, store.store_phone, store.store_description FROM users INNER JOIN store ON store.user_id = users.id WHERE users.id=$1",
+				[id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 };
