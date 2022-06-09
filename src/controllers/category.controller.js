@@ -2,6 +2,8 @@ const { success, failed } = require("../helpers/response");
 const categoryModel = require("../models/category.model");
 const deleteFile = require("../utils/deleteFile");
 const { v4: uuidv4 } = require("uuid");
+const uploadGoogle = require("../helpers/uploadGoogleDrive");
+const deleteGooogle = require("../helpers/deleteGoogleDrive");
 
 module.exports = {
   addCategory: async (req, res) => {
@@ -35,8 +37,15 @@ module.exports = {
         });
         return;
       }
+
+      let photo = "";
+      if (req.file) {
+        const photoGd = await uploadGoogle(req.file);
+        photo = photoGd.id;
+        deleteFile(`public/${req.file.filename}`);
+      }
+
       const id = uuidv4();
-      const photo = req.file.filename;
       const isActive = true;
       const data = {
         id,
@@ -271,6 +280,7 @@ module.exports = {
         const categoryNameCheck = await categoryModel.categoryNameCheck(
           categoryName
         );
+        // return console.log(categoryNameCheck);
         if (categoryNameCheck.rowCount > 0) {
           deleteFile(`public/${req.file.filename}`);
           const err = {
@@ -287,8 +297,12 @@ module.exports = {
       }
       // cek photo
       if (req.file) {
-        photo = req.file.filename;
-        deleteFile(`public/${categoryData.rows[0].photo}`);
+        if (categoryData.rows[0].photo) {
+          await deleteGooogle(categoryData.rows[0].photo);
+        }
+        const photoGd = await uploadGoogle(req.file);
+        photo = photoGd.id;
+        deleteFile(`public/${req.file.filename}`);
       } else {
         photo = categoryData.rows[0].photo;
       }
@@ -307,12 +321,11 @@ module.exports = {
         paggination: [],
       });
     } catch (error) {
-      success(res, {
-        code: 200,
-        status: "success",
-        message: `update category success`,
-        data: data,
-        paggination: [],
+      failed(res, {
+        code: 500,
+        status: "error",
+        message: error.message,
+        error: [],
       });
     }
   },
@@ -409,7 +422,7 @@ module.exports = {
         return;
       }
       await categoryModel.deleteCategorydata(id);
-      deleteFile(`public/${data.rows[0].photo}`);
+      await deleteGooogle(data.rows[0].photo);
       success(res, {
         code: 200,
         status: "success",
