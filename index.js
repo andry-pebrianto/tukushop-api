@@ -32,6 +32,7 @@ app.use(express.static("public"));
 // auth route
 app.use(require("./src/routers/auth.route"));
 app.use(require("./src/routers/user.route"));
+app.use(require("./src/routers/product.route"));
 app.use(categoryRoute);
 app.use(require("./src/routers/productBrand.route"));
 app.use(require("./src/routers/cart.route"));
@@ -45,9 +46,9 @@ const io = socketIo(server, {
   },
 });
 io.on("connection", (socket) => {
-  console.log("new user connected");
-  socketController(io, socket);
+	console.log("new user connected");
+	socketController(io, socket);
 });
 server.listen(APP_PORT, () => {
-  console.log(`Service running on port ${APP_PORT}`);
+	console.log(`Service running on port ${APP_PORT}`);
 });
