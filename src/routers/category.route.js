@@ -12,8 +12,7 @@ const {
 } = require("../controllers/category.controller");
 
 // import middlewares
-const categoryUpload = require("../middleware/categoryUpload");
-// const validation = require("../middleware/validation");
+const upload = require("../middleware/upload");
 const runValidation = require("../middleware/runValidation");
 const jwtAuth = require("../middleware/jwtAuth");
 const {
@@ -39,18 +38,12 @@ router
     "/category",
     jwtAuth,
     onlyAdmin,
-    categoryUpload,
+    upload,
     createValidation,
     runValidation,
     addCategory
   ) // add category admin only
-  .put(
-    "/category/:id",
-    categoryUpload,
-    updateValidation,
-    runValidation,
-    updateCategory
-  ) // update category admin only
+  .put("/category/:id", upload, updateValidation, runValidation, updateCategory) // update category admin only
   .put(
     "/category-status/:id",
     jwtAuth,
