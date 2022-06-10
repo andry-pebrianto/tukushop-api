@@ -5,9 +5,32 @@ const productModel = require("../models/product.model");
 const deleteFile = require("../helpers/deleteFile");
 const uploadGoogleDrive = require("../helpers/uploadGoogleDrive");
 // const deleteGoogleDrive = require("../helpers/deleteGoogleDrive");
-// const createPagination = require("../helpers/createPagination");
+const createPagination = require("../helpers/createPagination");
 
 module.exports = {
+	listProduct: async (req, res) => {
+		try {
+			const { page, limit, search = "", sort="" } = req.query;
+			const count = await productModel.countProduct(search);
+			const paging = createPagination(count.rows[0].count, page, limit);
+			const products = await productModel.selectListProduct(paging, search, sort);
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: products.rows,
+				message: "Select List Product Success",
+				pagination: paging.response,
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
 	addProduct: async (req, res) => {
 		try {
 			const {
@@ -59,7 +82,7 @@ module.exports = {
 				await productModel.insertProductSizes({
 					id: uuidv4(),
 					productId: productData.rows[0].id,
-					size
+					size,
 				});
 			});
 
