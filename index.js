@@ -10,6 +10,7 @@ const http = require("http");
 const socketController = require("./src/socket");
 
 // route here
+const categoryRoute = require("./src/routers/category.route");
 
 const app = express();
 app.use(cors());
@@ -30,6 +31,7 @@ app.use(express.static("public"));
 app.use(require("./src/routers/auth.route"));
 app.use(require("./src/routers/user.route"));
 app.use(require("./src/routers/product.route"));
+app.use(categoryRoute);
 
 const APP_PORT = process.env.PORT || 4000;
 
