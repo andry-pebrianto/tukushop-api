@@ -4,7 +4,7 @@ module.exports = {
 	selectListProduct: (paging, search, sort) =>
 		new Promise((resolve, reject) => {
 			let sql =
-        "SELECT * FROM product WHERE LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
+        "SELECT * FROM product WHERE product.is_active=true AND LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
 			if (sort.trim() === "name") {
 				sql += "ORDER BY product.product_name ";
 			} else if (sort.trim() === "stock") {
@@ -17,6 +17,42 @@ module.exports = {
 			sql += `LIMIT ${paging.limit} OFFSET ${paging.offset}`;
 
 			db.query(sql, [search], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	selectNewProduct: () =>
+		new Promise((resolve, reject) => {
+			db.query("SELECT  * FROM product", (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	selectAllProductImage: (productId) =>
+		new Promise((resolve, reject) => {
+			db.query("SELECT  * FROM product_images WHERE product_id=$1", [productId], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	selectAllProductSize: (productId) =>
+		new Promise((resolve, reject) => {
+			db.query("SELECT  * FROM product_sizes WHERE product_id=$1", [productId], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	selectAllProductColor: (productId) =>
+		new Promise((resolve, reject) => {
+			db.query("SELECT  * FROM product_color WHERE product_id=$1", [productId], (error, result) => {
 				if (error) {
 					reject(error);
 				}

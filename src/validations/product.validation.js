@@ -12,7 +12,7 @@ const insert = [
 	check("description", "Description maximum length is 250 characters").isLength({ max: 250 }),
 	// stock
 	check("stock", "Stock only can contains number").isNumeric(),
-	check("stock", "Stock too much").isLength({ max: 5 }),
+	check("stock", "Stock too much").isLength({ max: 8 }),
 ];
 
 module.exports = {

@@ -15,12 +15,42 @@ module.exports = {
 			const paging = createPagination(count.rows[0].count, page, limit);
 			const products = await productModel.selectListProduct(paging, search, sort);
 
+			// get product_image, product_size, product_color
+			for(let i=0; i < products.rows.length; i++) {
+				const productImages = await productModel.selectAllProductImage(products.rows[i].id);
+				const productSizes = await productModel.selectAllProductSize(products.rows[i].id);
+				const productColors = await productModel.selectAllProductColor(products.rows[i].id);
+
+				products.rows[i].product_images = productImages.rows;
+				products.rows[i].product_sizes = productSizes.rows;
+				products.rows[i].product_color = productColors.rows;
+			}
+
 			success(res, {
 				code: 200,
 				status: "success",
 				data: products.rows,
 				message: "Select List Product Success",
 				pagination: paging.response,
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	newProduct: async (req, res) => {
+		try {
+			const products = await productModel.selectNewProduct();
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: products.rows,
+				message: "Select New Product Success",
 			});
 		} catch (error) {
 			failed(res, {
