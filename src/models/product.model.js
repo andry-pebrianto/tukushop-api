@@ -1,6 +1,19 @@
 const db = require("../config/db");
 
 module.exports = {
+	findBy: (field, search) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				`SELECT * FROM product WHERE ${field}=$1`,
+				[search],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 	selectListProduct: (paging, search, sort) =>
 		new Promise((resolve, reject) => {
 			let sql =
@@ -146,6 +159,19 @@ module.exports = {
 			db.query(
 				"INSERT INTO product_color (id, product_id, color_name, color_value) VALUES ($1, $2, $3, $4) RETURNING id",
 				[id, productId, colorName, colorValue],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
+	disableOrEnable: (productId, status) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				`UPDATE product SET is_active=${status} WHERE id=$1 RETURNING is_active`,
+				[productId],
 				(error, result) => {
 					if (error) {
 						reject(error);
