@@ -12,7 +12,7 @@ const {
 } = require("../controllers/productBrand.controller");
 
 // import middleware
-const productBrandUpload = require("../middleware/productBrandUpload");
+const upload = require("../middleware/upload");
 const runValidation = require("../middleware/runValidation");
 const jwtAuth = require("../middleware/jwtAuth");
 const { onlyAdmin, buyerOrSeller } = require("../middleware/authorization");
@@ -34,7 +34,7 @@ router
     "/product-brand",
     jwtAuth,
     onlyAdmin,
-    productBrandUpload,
+    upload,
     createValidation,
     runValidation,
     addProductBrand
@@ -43,7 +43,7 @@ router
     "/product-brand/:id",
     jwtAuth,
     onlyAdmin,
-    productBrandUpload,
+    upload,
     updateValidation,
     runValidation,
     updateProductBrand
