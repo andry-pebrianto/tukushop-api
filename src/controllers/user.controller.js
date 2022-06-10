@@ -53,6 +53,38 @@ module.exports = {
 			});
 		}
 	},
+	getDetailUser: async (req, res) => {
+		try {
+			const { id } = req.params;
+			let user = await userModel.findBy("id", id);
+
+			// jika user adalah seller
+			if(user.rows[0].level === 2) {
+				user = await userModel.getDetailSeller(id);
+			} 
+			
+			// jika user adalah buyer
+			else {
+				user = await userModel.getDetailBuyer(id);
+			}
+
+			console.log(user.rows);
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: user.rows[0],
+				message: "Select Detail User Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
 	editProfileBuyer: async (req, res) => {
 		try {
 			const { id } = req.params;
