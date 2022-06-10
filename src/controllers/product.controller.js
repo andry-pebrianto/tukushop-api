@@ -52,6 +52,51 @@ module.exports = {
 			});
 		}
 	},
+	detailProduct: async (req, res) => {
+		try {
+			const { id } = req.params;
+			const product = await productModel.detailProduct(id);
+
+			// jika product tidak ditemukan
+			if (!product.rowCount) {
+				failed(res, {
+					code: 404,
+					status: "error",
+					message: "Select Detail Product Failed",
+					error: `Product with Id ${id} not found`,
+				});
+				return;
+			}
+
+			const productImages = await productModel.selectAllProductImage(
+				product.rows[0].id
+			);
+			const productSizes = await productModel.selectAllProductSize(
+				product.rows[0].id
+			);
+			const productColors = await productModel.selectAllProductColor(
+				product.rows[0].id
+			);
+
+			product.rows[0].product_images = productImages.rows;
+			product.rows[0].product_sizes = productSizes.rows;
+			product.rows[0].product_color = productColors.rows;
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: product.rows[0],
+				message: "Select Detail Product Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
 	listMyProduct: async (req, res) => {
 		try {
 			const id = req.APP_DATA.tokenDecoded.id;
@@ -149,6 +194,7 @@ module.exports = {
 				stock,
 				productSizes,
 				productColors,
+				isNew,
 			} = req.body;
 
 			// insert product
@@ -164,6 +210,7 @@ module.exports = {
 				rating: 8,
 				date: new Date(),
 				isActive: true,
+				isNew,
 			});
 
 			// insert photo

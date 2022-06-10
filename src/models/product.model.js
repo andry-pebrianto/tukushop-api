@@ -14,6 +14,19 @@ module.exports = {
 				}
 			);
 		}),
+	detailProduct: (id) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				"SELECT * FROM product WHERE id=$1 AND product.is_active=true",
+				[id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 	selectListProduct: (paging, search, sort) =>
 		new Promise((resolve, reject) => {
 			let sql =
@@ -130,10 +143,11 @@ module.exports = {
 				rating,
 				date,
 				isActive,
+				isNew,
 			} = body;
 
 			db.query(
-				"INSERT INTO product (id, store_id, category_id, product_name, brand_id, price, description, stock, rating, date, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id",
+				"INSERT INTO product (id, store_id, category_id, product_name, brand_id, price, description, stock, rating, date, is_active, is_new) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id",
 				[
 					id,
 					storeId,
@@ -146,6 +160,7 @@ module.exports = {
 					rating,
 					date,
 					isActive,
+					isNew,
 				],
 				(error, result) => {
 					if (error) {
