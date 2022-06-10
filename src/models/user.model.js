@@ -92,7 +92,7 @@ module.exports = {
 	selectAllBuyer: (paging, search, sort) =>
 		new Promise((resolve, reject) => {
 			let sql =
-        "SELECT users.id, users.name, users.email, users.level, users.photo, profile.birth, profile.phone, profile.gender FROM users INNER JOIN profile ON profile.user_id = users.id WHERE level=3 AND LOWER(users.name) LIKE '%'||LOWER($1)||'%'";
+        "SELECT users.id, users.name, users.email, users.level, users.photo, profile.birth, profile.phone, profile.gender FROM users INNER JOIN profile ON profile.user_id = users.id WHERE users.level=3 AND LOWER(users.name) LIKE '%'||LOWER($1)||'%'";
 			if (sort.trim() === "email") {
 				sql += "ORDER BY users.email ";
 			} else if (sort.trim() === "birth") {
@@ -112,7 +112,7 @@ module.exports = {
 	countBuyer: (search) =>
 		new Promise((resolve, reject) => {
 			let sql =
-        "SELECT COUNT(*) FROM users INNER JOIN profile ON profile.user_id = users.id WHERE level=3 AND LOWER(users.name) LIKE '%'||LOWER($1)||'%'";
+        "SELECT COUNT(*) FROM users INNER JOIN profile ON profile.user_id = users.id WHERE users.level=3 AND LOWER(users.name) LIKE '%'||LOWER($1)||'%'";
 
 			db.query(sql, [search], (error, result) => {
 				if (error) {
@@ -124,7 +124,7 @@ module.exports = {
 	selectAllSeller: (paging, search, sort) =>
 		new Promise((resolve, reject) => {
 			let sql =
-        "SELECT users.id, users.name, users.level, users.email, users.photo, store.store_name, store.store_phone, store.store_description FROM users INNER JOIN store ON store.user_id = users.id WHERE level=2 AND LOWER(name) LIKE '%'||LOWER($1)||'%' OR LOWER(store_name) LIKE '%'||LOWER($1)||'%' ";
+        "SELECT users.id, users.name, users.level, users.email, users.photo, store.store_name, store.store_phone, store.store_description FROM users INNER JOIN store ON store.user_id = users.id WHERE users.level=2 AND LOWER(name) LIKE '%'||LOWER($1)||'%' OR LOWER(store_name) LIKE '%'||LOWER($1)||'%' ";
 			if (sort.trim() === "email") {
 				sql += "ORDER BY users.email ";
 			} else if (sort.trim() === "store") {
@@ -144,7 +144,7 @@ module.exports = {
 	countSeller: (search) =>
 		new Promise((resolve, reject) => {
 			let sql =
-        "SELECT COUNT(*) FROM users INNER JOIN store ON store.user_id = users.id WHERE level=2 AND LOWER(name) LIKE '%'||LOWER($1)||'%' OR LOWER(store_name) LIKE '%'||LOWER($1)||'%'";
+        "SELECT COUNT(*) FROM users INNER JOIN store ON store.user_id = users.id WHERE users.level=2 AND LOWER(name) LIKE '%'||LOWER($1)||'%' OR LOWER(store_name) LIKE '%'||LOWER($1)||'%'";
 
 			db.query(sql, [search], (error, result) => {
 				if (error) {
