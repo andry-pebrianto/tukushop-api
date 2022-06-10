@@ -14,6 +14,19 @@ module.exports = {
 				}
 			);
 		}),
+	findStoreBy: (field, search) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				`SELECT * FROM store WHERE ${field}=$1`,
+				[search],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 	insertBuyer: (body) =>
 		new Promise((resolve, reject) => {
 			const { id, userId } = body;
