@@ -25,7 +25,7 @@ module.exports = {
 		}),
 	selectNewProduct: () =>
 		new Promise((resolve, reject) => {
-			db.query("SELECT  * FROM product", (error, result) => {
+			db.query("SELECT * FROM product WHERE product.is_active=true ORDER BY product.date DESC", (error, result) => {
 				if (error) {
 					reject(error);
 				}
