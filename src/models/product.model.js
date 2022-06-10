@@ -36,9 +36,44 @@ module.exports = {
 				resolve(result);
 			});
 		}),
-	selectNewProduct: () =>
+	countProduct: (search) =>
 		new Promise((resolve, reject) => {
-			db.query("SELECT * FROM product WHERE product.is_active=true ORDER BY product.date DESC", (error, result) => {
+			let sql = "SELECT COUNT(*) FROM product WHERE product.is_active=true AND LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
+
+			db.query(sql, [search], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	selectListProductById: (storeId, paging, search, sort) =>
+		new Promise((resolve, reject) => {
+			let sql =
+        "SELECT * FROM product WHERE store_id=$1 AND LOWER(product.product_name) LIKE '%'||LOWER($2)||'%'";
+			if (sort.trim() === "name") {
+				sql += "ORDER BY product.product_name ";
+			} else if (sort.trim() === "stock") {
+				sql += "ORDER BY product.stock ";
+			} else if (sort.trim() === "price") {
+				sql += "ORDER BY product.price ";
+			} else {
+				sql += "ORDER BY product.date ";
+			}
+			sql += `LIMIT ${paging.limit} OFFSET ${paging.offset}`;
+
+			db.query(sql, [storeId, search], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	countProductById: (storeId, search) =>
+		new Promise((resolve, reject) => {
+			let sql = "SELECT COUNT(*) FROM product WHERE store_id=$1 AND LOWER(product.product_name) LIKE '%'||LOWER($2)||'%'";
+
+			db.query(sql, [storeId, search], (error, result) => {
 				if (error) {
 					reject(error);
 				}
@@ -72,11 +107,9 @@ module.exports = {
 				resolve(result);
 			});
 		}),
-	countProduct: (search) =>
+	selectNewProduct: () =>
 		new Promise((resolve, reject) => {
-			let sql = "SELECT COUNT(*) FROM product WHERE LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
-
-			db.query(sql, [search], (error, result) => {
+			db.query("SELECT * FROM product WHERE product.is_active=true ORDER BY product.date DESC", (error, result) => {
 				if (error) {
 					reject(error);
 				}
