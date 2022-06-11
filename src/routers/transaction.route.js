@@ -16,8 +16,7 @@ const router = express.Router();
 
 router
 	.post("/transaction", jwtAuth, onlyBuyer, createTransaction)
-	// .get("/transaction", jwtAuth, onlyAdmin, getAllTransaction)
-	.get("/transaction", jwtAuth, getAllTransaction)
+	.get("/transaction", jwtAuth, onlyAdmin, getAllTransaction)
 	.put("/transaction/:id/cancel", jwtAuth, onlyBuyer, cancelTransaction)
 	.put("/transaction/:id/packed", jwtAuth, onlyAdmin, packedTransaction)
 	.put("/transaction/:id/sent", jwtAuth, onlyAdmin, sentTransaction)

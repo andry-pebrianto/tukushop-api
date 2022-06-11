@@ -119,6 +119,9 @@ module.exports = {
 	},
 	packedTransaction: async (req, res) => {
 		try {
+			const { id } = req.params;
+			await transactionModel.changeTransactionStatus(id, 2);
+
 			success(res, {
 				code: 200,
 				status: "success",
@@ -136,6 +139,9 @@ module.exports = {
 	},
 	sentTransaction: async (req, res) => {
 		try {
+			const { id } = req.params;
+			await transactionModel.changeTransactionStatus(id, 3);
+
 			success(res, {
 				code: 200,
 				status: "success",
@@ -153,6 +159,9 @@ module.exports = {
 	},
 	completedTransaction: async (req, res) => {
 		try {
+			const { id } = req.params;
+			await transactionModel.changeTransactionStatus(id, 4);
+
 			success(res, {
 				code: 200,
 				status: "success",
