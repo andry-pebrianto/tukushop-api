@@ -264,6 +264,100 @@ module.exports = {
 			});
 		}
 	},
+	editProduct: async (req, res) => {
+		try {
+			const {id} = req.params;
+			const product = await productModel.detailProduct(id);
+
+			// jika product tidak ditemukan
+			if (!product.rowCount) {
+				failed(res, {
+					code: 404,
+					status: "error",
+					message: "Edit Product Failed",
+					error: `Product with Id ${id} not found`,
+				});
+				return;
+			}
+
+			const {
+				categoryId,
+				brandId,
+				productName,
+				price,
+				description,
+				stock,
+				productSizes,
+				productColors,
+				isNew,
+			} = req.body;
+
+			// insert product
+			await productModel.updateProduct(id, {
+				categoryId,
+				brandId,
+				productName,
+				price,
+				description,
+				stock,
+				isNew,
+			});
+
+			// insert photo
+			if (req.files) {
+				if (req.files.photo) {
+					req.files.photo.map(async (item) => {
+						// upload photo baru ke gd
+						const photoGd = await uploadGoogleDrive(item);
+						await productModel.insertProductPhoto({
+							id: uuidv4(),
+							productId: product.rows[0].id,
+							photo: photoGd.id,
+						});
+						// menghapus photo setelah diupload ke gd
+						deleteFile(item.path);
+					});
+				}
+			}
+
+			// delete all sizes product have
+			await productModel.deleteAllProductSizes(product.rows[0].id);
+			// insert product sizes
+			productSizes.map(async (size) => {
+				await productModel.insertProductSizes({
+					id: uuidv4(),
+					productId: product.rows[0].id,
+					size,
+				});
+			});
+
+			// delete all color product have
+			await productModel.deleteAllProductColors(product.rows[0].id);
+			// insert product colors
+			productColors.map(async (color) => {
+				await productModel.insertProductColors({
+					id: uuidv4(),
+					productId: product.rows[0].id,
+					colorName: color.colorName,
+					colorValue: color.colorValue,
+				});
+			});
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: null,
+				message: "Edit Product Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
 	disableProduct: async (req, res) => {
 		try {
 			const { id } = req.params;

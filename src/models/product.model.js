@@ -170,6 +170,38 @@ module.exports = {
 				}
 			);
 		}),
+	updateProduct: (id, body) =>
+		new Promise((resolve, reject) => {
+			const {
+				categoryId,
+				productName,
+				brandId,
+				price,
+				description,
+				stock,
+				isNew,
+			} = body;
+
+			db.query(
+				"UPDATE product SET category_id=$1, product_name=$2, brand_id=$3, price=$4, description=$5, stock=$6, is_new=$7 WHERE id=$8 RETURNING id",
+				[
+					categoryId,
+					productName,
+					brandId,
+					price,
+					description,
+					stock,
+					isNew,
+					id,
+				],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 	insertProductPhoto: (data) =>
 		new Promise((resolve, reject) => {
 			const { id, productId, photo } = data;
@@ -207,6 +239,32 @@ module.exports = {
 			db.query(
 				"INSERT INTO product_color (id, product_id, color_name, color_value) VALUES ($1, $2, $3, $4) RETURNING id",
 				[id, productId, colorName, colorValue],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
+	deleteAllProductSizes: (id) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				"DELETE FROM product_sizes WHERE product_id=$1",
+				[id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
+	deleteAllProductColors: (id) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				"DELETE FROM product_color WHERE product_id=$1",
+				[id],
 				(error, result) => {
 					if (error) {
 						reject(error);

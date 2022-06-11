@@ -11,6 +11,7 @@ const insert = [
 	// description
 	check("description", "Description maximum length is 250 characters").isLength({ max: 250 }),
 	// stock
+	check("stock", "Stock required").not().isEmpty(),
 	check("stock", "Stock only can contains number").isNumeric(),
 	check("stock", "Stock too much").isLength({ max: 8 }),
 ];
