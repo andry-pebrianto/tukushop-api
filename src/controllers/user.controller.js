@@ -58,17 +58,28 @@ module.exports = {
 			const { id } = req.params;
 			let user = await userModel.findBy("id", id);
 
+			// jika user tidak ditemukan
+			if (!user.rowCount) {
+				failed(res, {
+					code: 404,
+					status: "error",
+					message: "Select Detail User Failed",
+					error: `User with Id ${id} not found`,
+				});
+				return;
+			}
+
 			// jika user adalah seller
 			if(user.rows[0].level === 2) {
+				console.log("B");
 				user = await userModel.getDetailSeller(id);
 			} 
 			
 			// jika user adalah buyer
 			else {
+				console.log("C");
 				user = await userModel.getDetailBuyer(id);
 			}
-
-			console.log(user.rows);
 
 			success(res, {
 				code: 200,
