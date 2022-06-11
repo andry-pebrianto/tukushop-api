@@ -41,7 +41,7 @@ module.exports = (req, res, next) => {
 	const multerFields = multerUpload.fields([
 		{
 			name: "photo",
-			maxCount: 5,
+			maxCount: 100,
 		},
 	]);
 	multerFields(req, res, (err) => {
@@ -51,7 +51,7 @@ module.exports = (req, res, next) => {
 				errorMessage = `File ${err.field} too large, max 2mb`;
 			}
 			if (err.code === "LIMIT_UNEXPECTED_FILE") {
-				errorMessage = "Maximum files that can be uploaded is 5";
+				errorMessage = "Maximum files that can be uploaded is 100";
 			}
 
 			failed(res, {

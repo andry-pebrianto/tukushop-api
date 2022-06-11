@@ -1,5 +1,6 @@
 const userModel = require("../models/user.model");
 const { failed } = require("../helpers/response");
+const productModel = require("../models/product.model");
 
 module.exports = {
 	isVerified: async (req, res, next) => {
@@ -133,6 +134,39 @@ module.exports = {
 					message: "Unauthorized",
 					error: "You do not have access",
 				});
+			}
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "failed",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	productOwner: async (req, res, next) => {
+		try {
+			const idUser = req.APP_DATA.tokenDecoded.id;
+			const idUpdate = req.params.id;
+
+			const product = await productModel.findBy("id", idUpdate);
+			console.log(product.rowCount);
+
+			if (!product.rowCount) {
+				next();
+			} else {
+				const store = await userModel.findStoreBy("id", product.rows[0].store_id);
+
+				if (idUser === store.rows[0].user_id) {
+					next();
+				} else {
+					failed(res, {
+						code: 401,
+						status: "failed",
+						message: "Unauthorized",
+						error: "You do not have access",
+					});
+				}
 			}
 		} catch (error) {
 			failed(res, {
