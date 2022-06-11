@@ -12,7 +12,6 @@ module.exports = {
 			const {
 				productId,
 				paymentMethod,
-				status,
 				city,
 				postalCode,
 				address,
@@ -28,7 +27,7 @@ module.exports = {
 				invoice: crypto.randomBytes(10).toString("hex"),
 				total: price * qty,
 				paymentMethod,
-				status,
+				status: 1,
 				city,
 				postalCode,
 				address,
@@ -86,4 +85,94 @@ module.exports = {
 			});
 		}
 	},
+	cancelTransaction: async (req, res) => {
+		try {
+			const { id } = req.params;
+			const transaction = await transactionModel.findBy("id", id);
+
+			if (transaction.rows[0].status !== 1) {
+				failed(res, {
+					code: 400,
+					status: "error",
+					message: "Cancel Transaction Failed",
+					error: "You can't cancel this transaction",
+				});
+				return;
+			}
+
+			await transactionModel.changeTransactionStatus(id, 0);
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: null,
+				message: "Cancel Transaction Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	packedTransaction: async (req, res) => {
+		try {
+			success(res, {
+				code: 200,
+				status: "success",
+				data: null,
+				message: "Packed Transaction Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	sentTransaction: async (req, res) => {
+		try {
+			success(res, {
+				code: 200,
+				status: "success",
+				data: null,
+				message: "Sent Transaction Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	completedTransaction: async (req, res) => {
+		try {
+			success(res, {
+				code: 200,
+				status: "success",
+				data: null,
+				message: "Completed Transaction Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
 };
+
+// status
+// 0 = cancelled
+// 1 = new
+// 2 = packed
+// 3 = sent
+// 4 = completed

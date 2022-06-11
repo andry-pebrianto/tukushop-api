@@ -1,6 +1,19 @@
 const db = require("../config/db");
 
 module.exports = {
+	findBy: (field, search) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				`SELECT * FROM transaction WHERE ${field}=$1`,
+				[search],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 	insertTransaction: (data) =>
 		new Promise((resolve, reject) => {
 			const {
@@ -101,5 +114,18 @@ module.exports = {
 				}
 				resolve(result);
 			});
+		}),
+	changeTransactionStatus: (id, status) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				"UPDATE transaction SET status=$1 WHERE id=$2",
+				[status, id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
 		}),
 };
