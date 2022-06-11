@@ -69,4 +69,37 @@ module.exports = {
 				}
 			);
 		}),
+	selectListTransaction: (paging, sort) =>
+		new Promise((resolve, reject) => {
+			let sql =
+        "SELECT transaction.id, transaction.user_id, transaction.date, transaction.total, transaction.payment_method, transaction.status, transaction.city, transaction.postal_code, transaction.invoice, transaction.address, transaction.recipient_phone, transaction.recipient_name, users.name, users.photo, users.email, users.level FROM transaction INNER JOIN users ON users.id = transaction.user_id ";
+			if (sort.trim() === "payment") {
+				sql += "ORDER BY transaction.payment_method ";
+			} else if (sort.trim() === "postal") {
+				sql += "ORDER BY transaction.postal_code ";
+			} else if (sort.trim() === "total") {
+				sql += "ORDER BY transaction.total ";
+			} else {
+				sql += "ORDER BY transaction.date ";
+			}
+			sql += `LIMIT ${paging.limit} OFFSET ${paging.offset}`;
+
+			db.query(sql, (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	countTransaction: () =>
+		new Promise((resolve, reject) => {
+			let sql = "SELECT COUNT(*) FROM transaction INNER JOIN users ON transaction.user_id = users.id";
+
+			db.query(sql, (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
 };

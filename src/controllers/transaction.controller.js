@@ -4,7 +4,7 @@ const { success, failed } = require("../helpers/response");
 // const userModel = require("../models/user.model");
 // const productModel = require("../models/product.model");
 const transactionModel = require("../models/transaction.model");
-// const createPagination = require("../helpers/createPagination");
+const createPagination = require("../helpers/createPagination");
 
 module.exports = {
 	createTransaction: async (req, res) => {
@@ -50,6 +50,32 @@ module.exports = {
 				status: "success",
 				data: null,
 				message: "Create Transaction Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	getAllTransaction: async (req, res) => {
+		try {
+			const { page, limit, sort = "" } = req.query;
+			const count = await transactionModel.countTransaction();
+			const paging = createPagination(count.rows[0].count, page, limit);
+			const transactions = await transactionModel.selectListTransaction(
+				paging,
+				sort
+			);
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: transactions.rows,
+				message: "Select List Transaction Success",
+				pagination: paging.response,
 			});
 		} catch (error) {
 			failed(res, {
