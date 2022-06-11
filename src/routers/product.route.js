@@ -4,7 +4,7 @@ const runValidation = require("../middleware/runValidation");
 const jwtAuth = require("../middleware/jwtAuth");
 const multipleUpload = require("../middleware/multipleUpload");
 const { onlySeller, productOwner } = require("../middleware/authorization");
-const { addProduct, listProduct, newProduct, disableProduct, listMyProduct, detailProduct } = require("../controllers/product.controller");
+const { addProduct, listProduct, newProduct, disableProduct, listMyProduct, detailProduct, removeProductPhoto } = require("../controllers/product.controller");
 
 const router = express.Router();
 
@@ -14,6 +14,7 @@ router
 	.get("/product/my", jwtAuth, listMyProduct) // get semua product milik user yang sedang login
 	.get("/product/:id", jwtAuth, detailProduct) // get detail product
 	.post("/product", jwtAuth, onlySeller, multipleUpload, validation.insert, runValidation, addProduct)
-	.put("/product/:id/disable", jwtAuth, onlySeller, productOwner, disableProduct);
+	.put("/product/:id/disable", jwtAuth, onlySeller, productOwner, disableProduct)
+	.delete("/product/image/:id", jwtAuth, onlySeller, productOwner, removeProductPhoto);
 
 module.exports = router;

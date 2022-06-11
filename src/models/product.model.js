@@ -228,4 +228,17 @@ module.exports = {
 				}
 			);
 		}),
+	deleteProductPhoto: (id) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				"DELETE FROM product_images WHERE id=$1",
+				[id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 };

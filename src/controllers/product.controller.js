@@ -299,4 +299,25 @@ module.exports = {
 			});
 		}
 	},
+	removeProductPhoto: async (req, res) => {
+		try {
+			const { id } = req.params;
+
+			await productModel.deleteProductPhoto(id);
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: null,
+				message: "Delete Product Photo Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
 };
