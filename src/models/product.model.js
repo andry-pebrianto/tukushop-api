@@ -228,6 +228,19 @@ module.exports = {
 				}
 			);
 		}),
+	detailPhoto: (id) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				"SELECT * FROM product_images WHERE id=$1",
+				[id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 	deleteProductPhoto: (id) =>
 		new Promise((resolve, reject) => {
 			db.query(

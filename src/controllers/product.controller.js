@@ -4,7 +4,7 @@ const userModel = require("../models/user.model");
 const productModel = require("../models/product.model");
 const deleteFile = require("../helpers/deleteFile");
 const uploadGoogleDrive = require("../helpers/uploadGoogleDrive");
-// const deleteGoogleDrive = require("../helpers/deleteGoogleDrive");
+const deleteGoogleDrive = require("../helpers/deleteGoogleDrive");
 const createPagination = require("../helpers/createPagination");
 
 module.exports = {
@@ -303,7 +303,12 @@ module.exports = {
 		try {
 			const { id } = req.params;
 
+			const product = await productModel.detailPhoto(id);
 			await productModel.deleteProductPhoto(id);
+
+			if (product.rowCount) {
+				await deleteGoogleDrive(product.rows[0].photo);
+			}
 
 			success(res, {
 				code: 200,
