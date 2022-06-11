@@ -34,6 +34,7 @@ app.use(require("./src/routers/auth.route"));
 app.use(categoryRoute);
 app.use(require("./src/routers/productBrand.route"));
 app.use(require("./src/routers/cart.route"));
+app.use(require("./src/routers/address.route"));
 
 const APP_PORT = process.env.PORT || 4000;
 
