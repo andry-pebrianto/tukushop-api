@@ -1,6 +1,6 @@
 const express = require("express");
-// const validation = require("../validations/product.validation");
-// const runValidation = require("../middleware/runValidation");
+const validation = require("../validations/transaction.validation");
+const runValidation = require("../middleware/runValidation");
 const jwtAuth = require("../middleware/jwtAuth");
 const { onlyBuyer, onlyAdmin } = require("../middleware/authorization");
 const {
@@ -15,7 +15,7 @@ const {
 const router = express.Router();
 
 router
-	.post("/transaction", jwtAuth, onlyBuyer, createTransaction)
+	.post("/transaction", jwtAuth, onlyBuyer, validation.insert, runValidation, createTransaction)
 	.get("/transaction", jwtAuth, onlyAdmin, getAllTransaction)
 	.put("/transaction/:id/cancel", jwtAuth, onlyBuyer, cancelTransaction)
 	.put("/transaction/:id/packed", jwtAuth, onlyAdmin, packedTransaction)
