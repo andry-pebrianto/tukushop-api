@@ -150,7 +150,6 @@ module.exports = {
 			const idUpdate = req.params.id;
 
 			const product = await productModel.findBy("id", idUpdate);
-			console.log(product.rowCount);
 
 			if (!product.rowCount) {
 				next();

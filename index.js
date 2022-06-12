@@ -33,6 +33,7 @@ app.use(express.static("public"));
 app.use(require("./src/routers/auth.route"));
 app.use(require("./src/routers/user.route"));
 app.use(require("./src/routers/product.route"));
+app.use(require("./src/routers/transaction.route"));
 app.use(categoryRoute);
 app.use(require("./src/routers/productBrand.route"));
 app.use(require("./src/routers/cart.route"));
