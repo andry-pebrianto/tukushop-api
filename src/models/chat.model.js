@@ -1,9 +1,11 @@
 const db = require("../config/db");
+const { v4: uuidv4 } = require("uuid");
 
 const chatModel = {
 	insertChat: (sender, receiver, message) => {
+		const id = uuidv4();
 		return new Promise((resolve, reject) => {
-			db.query("INSERT INTO chat (sender, receiver, message) VALUES ($1, $2, $3)", [sender, receiver, message], (err, result) => {
+			db.query("INSERT INTO chat (id, sender, receiver, message) VALUES ($1, $2, $3, $4)", [id, sender, receiver, message], (err, result) => {
 				if (err) {
 					reject(err);
 				} else {
