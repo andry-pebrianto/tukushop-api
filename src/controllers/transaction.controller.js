@@ -24,7 +24,7 @@ module.exports = {
 			const product = await productModel.findBy("id", productId);
 
 			// jika qty pesanan melebihi stock
-			if(parseInt(qty) > product.rows[0].stock) {
+			if (parseInt(qty) > product.rows[0].stock) {
 				failed(res, {
 					code: 400,
 					status: "error",
@@ -78,7 +78,7 @@ module.exports = {
 			});
 		}
 	},
-	getAllTransaction: async (req, res) => {
+	listTransactionAdmin: async (req, res) => {
 		try {
 			const { page, limit, sort = "" } = req.query;
 			const count = await transactionModel.countTransaction();
@@ -88,12 +88,14 @@ module.exports = {
 				sort
 			);
 
-			for(let i = 0; i < transactions.rows.length; i++) {
+			for (let i = 0; i < transactions.rows.length; i++) {
 				const sellerData = await userModel.findBy(
-					"id", transactions.rows[i].seller_id,
+					"id",
+					transactions.rows[i].seller_id
 				);
 				const buyerData = await userModel.findBy(
-					"id", transactions.rows[i].buyer_id,
+					"id",
+					transactions.rows[i].buyer_id
 				);
 
 				transactions.rows[i].seller_data = sellerData.rows[0];
@@ -121,7 +123,7 @@ module.exports = {
 			const { id } = req.params;
 			const transaction = await transactionModel.findBy("id", id);
 
-			if(!transaction.rowCount) {
+			if (!transaction.rowCount) {
 				failed(res, {
 					code: 400,
 					status: "error",
@@ -144,13 +146,22 @@ module.exports = {
 			await transactionModel.changeTransactionStatus(id, 0);
 
 			// for get product_id
-			const transactionDetail = await transactionModel.findDetailBy("transaction_id", id);
+			const transactionDetail = await transactionModel.findDetailBy(
+				"transaction_id",
+				id
+			);
 			// for get current stock product
-			const product = await productModel.findBy("id", transactionDetail.rows[0].product_id);
+			const product = await productModel.findBy(
+				"id",
+				transactionDetail.rows[0].product_id
+			);
 			// current stock - qty
 			const newStock = product.rows[0].stock + transactionDetail.rows[0].qty;
 			// reduce stock
-			await productModel.reduceStock(transactionDetail.rows[0].product_id, newStock);
+			await productModel.reduceStock(
+				transactionDetail.rows[0].product_id,
+				newStock
+			);
 
 			success(res, {
 				code: 200,
@@ -171,8 +182,8 @@ module.exports = {
 		try {
 			const { id } = req.params;
 			const transaction = await transactionModel.findBy("id", id);
-			
-			if(!transaction.rowCount) {
+
+			if (!transaction.rowCount) {
 				failed(res, {
 					code: 400,
 					status: "error",
@@ -181,7 +192,7 @@ module.exports = {
 				});
 				return;
 			}
-			
+
 			await transactionModel.changeTransactionStatus(id, 2);
 
 			success(res, {
@@ -204,7 +215,7 @@ module.exports = {
 			const { id } = req.params;
 			const transaction = await transactionModel.findBy("id", id);
 
-			if(!transaction.rowCount) {
+			if (!transaction.rowCount) {
 				failed(res, {
 					code: 400,
 					status: "error",
@@ -236,7 +247,7 @@ module.exports = {
 			const { id } = req.params;
 			const transaction = await transactionModel.findBy("id", id);
 
-			if(!transaction.rowCount) {
+			if (!transaction.rowCount) {
 				failed(res, {
 					code: 400,
 					status: "error",
@@ -254,6 +265,48 @@ module.exports = {
 				data: null,
 				message: "Completed Transaction Success",
 			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	listTransaction: async (req, res) => {
+		try {
+			const user = await userModel.findBy("id", req.APP_DATA.tokenDecoded.id);
+
+			// seller
+			if (user.rows[0].level === 2) {
+				success(res, {
+					code: 200,
+					status: "success",
+					data: null,
+					message: "Get List Seller Transaction Success",
+				});
+			}
+
+			// buyer
+			else {
+				const { page, limit } = req.query;
+				const count = await transactionModel.countGetListBuyerTransaction(
+					req.APP_DATA.tokenDecoded.id
+				);
+				const paging = createPagination(count.rows[0].count, page, limit);
+				const transactions = await transactionModel.getListBuyerTransaction(
+					req.APP_DATA.tokenDecoded.id,
+					paging
+				);
+
+				success(res, {
+					code: 200,
+					status: "success",
+					data: transactions.rows,
+					message: "Get List Buyer Transaction Success",
+				});
+			}
 		} catch (error) {
 			failed(res, {
 				code: 500,

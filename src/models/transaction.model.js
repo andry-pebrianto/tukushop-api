@@ -68,27 +68,12 @@ module.exports = {
 		}),
 	insertTransactionDetail: (data) =>
 		new Promise((resolve, reject) => {
-			const {
-				id,
-				transactionId,
-				productId,
-				sellerId,
-				buyerId,
-				price,
-				qty,
-			} = data;
+			const { id, transactionId, productId, sellerId, buyerId, price, qty } =
+        data;
 
 			db.query(
 				"INSERT INTO transaction_detail (id, transaction_id, product_id, seller_id, buyer_id, price, qty) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-				[
-					id,
-					transactionId,
-					productId,
-					sellerId,
-					buyerId,
-					price,
-					qty,
-				],
+				[id, transactionId, productId, sellerId, buyerId, price, qty],
 				(error, result) => {
 					if (error) {
 						reject(error);
@@ -121,7 +106,8 @@ module.exports = {
 		}),
 	countTransaction: () =>
 		new Promise((resolve, reject) => {
-			let sql = "SELECT COUNT(*) FROM transaction INNER JOIN transaction_detail ON transaction.id = transaction_detail.transaction_id";
+			let sql =
+        "SELECT COUNT(*) FROM transaction INNER JOIN transaction_detail ON transaction.id = transaction_detail.transaction_id";
 
 			db.query(sql, (error, result) => {
 				if (error) {
@@ -142,5 +128,28 @@ module.exports = {
 					resolve(result);
 				}
 			);
+		}),
+	getListBuyerTransaction: (id, paging) =>
+		new Promise((resolve, reject) => {
+			let sql = "SELECT transaction.id, transaction_detail.price, transaction_detail.qty, transaction.date, transaction.total, transaction.payment_method, transaction.status, transaction.address, transaction.invoice, transaction.postal_code, transaction.recipient_name, transaction.recipient_phone, product.product_name, product.description FROM transaction_detail INNER JOIN transaction ON transaction_detail.transaction_id=transaction.id INNER JOIN product ON transaction_detail.product_id=product.id WHERE buyer_id=$1 ";
+			sql += `LIMIT ${paging.limit} OFFSET ${paging.offset}`;
+
+			db.query(sql, [id], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	countGetListBuyerTransaction: (id) =>
+		new Promise((resolve, reject) => {
+			let sql = "SELECT * FROM transaction_detail INNER JOIN transaction ON transaction_detail.transaction_id=transaction.id INNER JOIN product ON transaction_detail.product_id=product.id WHERE buyer_id=$1";
+
+			db.query(sql, [id], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
 		}),
 };
