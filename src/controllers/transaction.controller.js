@@ -123,6 +123,16 @@ module.exports = {
 
 			await transactionModel.changeTransactionStatus(id, 0);
 
+
+			// for get product_id
+			const transactionDetail = await transactionModel.findDetailBy("transaction_id", id);
+			// for get current stock product
+			const product = await productModel.findBy("id", transactionDetail.rows[0].product_id);
+			// current stock - qty
+			const newStock = product.rows[0].stock + transactionDetail.rows[0].qty;
+			// reduce stock
+			await productModel.reduceStock(transactionDetail.rows[0].product_id, newStock);
+
 			success(res, {
 				code: 200,
 				status: "success",
@@ -154,15 +164,6 @@ module.exports = {
 			}
 			
 			await transactionModel.changeTransactionStatus(id, 2);
-
-			// for get product_id
-			const transactionDetail = await transactionModel.findDetailBy("transaction_id", id);
-			// for get current stock product
-			const product = await productModel.findBy("id", transactionDetail.rows[0].product_id);
-			// current stock - qty
-			const stock = product.rows[0].stock - transactionDetail.rows[0].qty;
-			// reduce stock
-			await productModel.reduceStock(transactionDetail.rows[0].product_id, stock);
 
 			success(res, {
 				code: 200,
