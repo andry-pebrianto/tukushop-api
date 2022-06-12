@@ -153,28 +153,34 @@ module.exports = {
 	},
 	login: async (req, res) => {
 		try {
-			const { email, password } = req.body;
+			const { email, password, login = "buyer" } = req.body;
 			const user = await userModel.findBy("email", email);
 
 			// jika user ditemukan
 			if (user.rowCount > 0) {
-				const match = await bcrypt.compare(password, user.rows[0].password);
-				// jika password benar
-				if (match) {
-					const jwt = await jwtToken({
-						id: user.rows[0].id,
-						level: user.rows[0].level,
-					});
-					success(res, {
-						code: 200,
-						payload: null,
-						message: "Login Success",
-						token: {
-							jwt,
+				if (
+					(login === "buyer" && user.rows[0].level === 3) ||
+          (login === "seller" && user.rows[0].level === 2) ||
+          (login === "admin" && user.rows[0].level === 1)
+				) {
+					const match = await bcrypt.compare(password, user.rows[0].password);
+					// jika password benar
+					if (match) {
+						const jwt = await jwtToken({
 							id: user.rows[0].id,
-						},
-					});
-					return;
+							level: user.rows[0].level,
+						});
+						success(res, {
+							code: 200,
+							payload: null,
+							message: "Login Success",
+							token: {
+								jwt,
+								id: user.rows[0].id,
+							},
+						});
+						return;
+					}
 				}
 			}
 
