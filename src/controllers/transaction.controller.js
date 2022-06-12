@@ -280,10 +280,20 @@ module.exports = {
 
 			// seller
 			if (user.rows[0].level === 2) {
+				const { page, limit } = req.query;
+				const count = await transactionModel.countGetListSellerTransaction(
+					req.APP_DATA.tokenDecoded.id
+				);
+				const paging = createPagination(count.rows[0].count, page, limit);
+				const transactions = await transactionModel.getListSellerTransaction(
+					req.APP_DATA.tokenDecoded.id,
+					paging
+				);
+
 				success(res, {
 					code: 200,
 					status: "success",
-					data: null,
+					data: transactions.rows,
 					message: "Get List Seller Transaction Success",
 				});
 			}

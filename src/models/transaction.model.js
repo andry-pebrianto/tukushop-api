@@ -131,7 +131,7 @@ module.exports = {
 		}),
 	getListBuyerTransaction: (id, paging) =>
 		new Promise((resolve, reject) => {
-			let sql = "SELECT transaction.id, transaction_detail.price, transaction_detail.qty, transaction.date, transaction.total, transaction.payment_method, transaction.status, transaction.address, transaction.invoice, transaction.postal_code, transaction.recipient_name, transaction.recipient_phone, product.product_name, product.description FROM transaction_detail INNER JOIN transaction ON transaction_detail.transaction_id=transaction.id INNER JOIN product ON transaction_detail.product_id=product.id WHERE buyer_id=$1 ";
+			let sql = "SELECT transaction.id, transaction_detail.price, transaction_detail.qty, transaction.date, transaction.total, transaction.payment_method, transaction.status, transaction.address, transaction.invoice, transaction.postal_code, transaction.recipient_name, transaction.recipient_phone, product.product_name, product.description FROM transaction_detail INNER JOIN transaction ON transaction_detail.transaction_id=transaction.id INNER JOIN product ON transaction_detail.product_id=product.id WHERE transaction_detail.buyer_id=$1 ";
 			sql += `LIMIT ${paging.limit} OFFSET ${paging.offset}`;
 
 			db.query(sql, [id], (error, result) => {
@@ -143,7 +143,30 @@ module.exports = {
 		}),
 	countGetListBuyerTransaction: (id) =>
 		new Promise((resolve, reject) => {
-			let sql = "SELECT * FROM transaction_detail INNER JOIN transaction ON transaction_detail.transaction_id=transaction.id INNER JOIN product ON transaction_detail.product_id=product.id WHERE buyer_id=$1";
+			let sql = "SELECT * FROM transaction_detail INNER JOIN transaction ON transaction_detail.transaction_id=transaction.id INNER JOIN product ON transaction_detail.product_id=product.id WHERE transaction_detail.buyer_id=$1";
+
+			db.query(sql, [id], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	getListSellerTransaction: (id, paging) =>
+		new Promise((resolve, reject) => {
+			let sql = "SELECT transaction.id, transaction_detail.price, transaction_detail.qty, transaction.date, transaction.total, transaction.payment_method, transaction.status, transaction.address, transaction.invoice, transaction.postal_code, transaction.recipient_name, transaction.recipient_phone, product.product_name, product.description FROM transaction_detail INNER JOIN transaction ON transaction_detail.transaction_id=transaction.id INNER JOIN product ON transaction_detail.product_id=product.id WHERE transaction_detail.seller_id=$1 ";
+			sql += `LIMIT ${paging.limit} OFFSET ${paging.offset}`;
+
+			db.query(sql, [id], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
+	countGetListSellerTransaction: (id) =>
+		new Promise((resolve, reject) => {
+			let sql = "SELECT * FROM transaction_detail INNER JOIN transaction ON transaction_detail.transaction_id=transaction.id INNER JOIN product ON transaction_detail.product_id=product.id WHERE transaction_detail.seller_id=$1";
 
 			db.query(sql, [id], (error, result) => {
 				if (error) {
