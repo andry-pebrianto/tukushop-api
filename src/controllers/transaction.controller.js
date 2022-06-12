@@ -109,20 +109,27 @@ module.exports = {
 			const { id } = req.params;
 			const transaction = await transactionModel.findBy("id", id);
 
-			if(transaction.rowCount) {
-				if (transaction.rows[0].status !== 1) {
-					failed(res, {
-						code: 400,
-						status: "error",
-						message: "Cancel Transaction Failed",
-						error: "You can't cancel this transaction",
-					});
-					return;
-				}
+			if(!transaction.rowCount) {
+				failed(res, {
+					code: 400,
+					status: "error",
+					message: "Cancel Transaction Failed",
+					error: "Transaction not found",
+				});
+				return;
+			}
+
+			if (transaction.rows[0].status !== 1) {
+				failed(res, {
+					code: 400,
+					status: "error",
+					message: "Cancel Transaction Failed",
+					error: "You can't cancel this transaction",
+				});
+				return;
 			}
 
 			await transactionModel.changeTransactionStatus(id, 0);
-
 
 			// for get product_id
 			const transactionDetail = await transactionModel.findDetailBy("transaction_id", id);
@@ -153,7 +160,7 @@ module.exports = {
 			const { id } = req.params;
 			const transaction = await transactionModel.findBy("id", id);
 			
-			if(transaction.rowCount) {
+			if(!transaction.rowCount) {
 				failed(res, {
 					code: 400,
 					status: "error",
@@ -185,7 +192,7 @@ module.exports = {
 			const { id } = req.params;
 			const transaction = await transactionModel.findBy("id", id);
 
-			if(transaction.rowCount) {
+			if(!transaction.rowCount) {
 				failed(res, {
 					code: 400,
 					status: "error",
@@ -217,7 +224,7 @@ module.exports = {
 			const { id } = req.params;
 			const transaction = await transactionModel.findBy("id", id);
 
-			if(transaction.rowCount) {
+			if(!transaction.rowCount) {
 				failed(res, {
 					code: 400,
 					status: "error",
