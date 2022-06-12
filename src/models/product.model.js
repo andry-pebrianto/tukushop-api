@@ -312,4 +312,17 @@ module.exports = {
 				}
 			);
 		}),
+	reduceStock: (id, stock) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				"UPDATE product SET stock=$1 WHERE id=$2",
+				[stock, id],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 };

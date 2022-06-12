@@ -14,11 +14,23 @@ module.exports = {
 				}
 			);
 		}),
+	findDetailBy: (field, search) =>
+		new Promise((resolve, reject) => {
+			db.query(
+				`SELECT * FROM transaction_detail WHERE ${field}=$1`,
+				[search],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 	insertTransaction: (data) =>
 		new Promise((resolve, reject) => {
 			const {
 				id,
-				userId,
 				invoice,
 				total,
 				paymentMethod,
@@ -32,10 +44,9 @@ module.exports = {
 			} = data;
 
 			db.query(
-				"INSERT INTO transaction (id, user_id, invoice, date, total, payment_method, status, city, postal_code, address, recipient_phone, recipient_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id",
+				"INSERT INTO transaction (id, invoice, date, total, payment_method, status, city, postal_code, address, recipient_phone, recipient_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id",
 				[
 					id,
-					userId,
 					invoice,
 					date,
 					total,
@@ -61,16 +72,20 @@ module.exports = {
 				id,
 				transactionId,
 				productId,
+				sellerId,
+				buyerId,
 				price,
 				qty,
 			} = data;
 
 			db.query(
-				"INSERT INTO transaction_detail (id, transaction_id, product_id, price, qty) VALUES ($1, $2, $3, $4, $5)",
+				"INSERT INTO transaction_detail (id, transaction_id, product_id, seller_id, buyer_id, price, qty) VALUES ($1, $2, $3, $4, $5, $6, $7)",
 				[
 					id,
 					transactionId,
 					productId,
+					sellerId,
+					buyerId,
 					price,
 					qty,
 				],

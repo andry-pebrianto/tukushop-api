@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
 const crypto = require("crypto");
 const { success, failed } = require("../helpers/response");
-// const userModel = require("../models/user.model");
-// const productModel = require("../models/product.model");
+const userModel = require("../models/user.model");
+const productModel = require("../models/product.model");
 const transactionModel = require("../models/transaction.model");
 const createPagination = require("../helpers/createPagination");
 
@@ -21,9 +21,11 @@ module.exports = {
 				qty,
 			} = req.body;
 
+			const product = await productModel.findBy("id", productId);
+			const store = await userModel.findStoreBy("id", product.rows[0].store_id);
+			const user = await userModel.findBy("id", store.rows[0].user_id);
 			const transactionData = await transactionModel.insertTransaction({
 				id: uuidv4(),
-				userId: req.APP_DATA.tokenDecoded.id,
 				invoice: crypto.randomBytes(10).toString("hex"),
 				total: price * qty,
 				paymentMethod,
@@ -38,11 +40,16 @@ module.exports = {
 
 			await transactionModel.insertTransactionDetail({
 				id: uuidv4(),
+				buyerId: req.APP_DATA.tokenDecoded.id,
+				sellerId: user.rows[0].id,
 				transactionId: transactionData.rows[0].id,
 				productId,
 				price,
 				qty,
 			});
+
+			const newStock = product.rows[0].stock - qty;
+			await productModel.reduceStock(productId, newStock);
 
 			success(res, {
 				code: 200,
@@ -90,14 +97,16 @@ module.exports = {
 			const { id } = req.params;
 			const transaction = await transactionModel.findBy("id", id);
 
-			if (transaction.rows[0].status !== 1) {
-				failed(res, {
-					code: 400,
-					status: "error",
-					message: "Cancel Transaction Failed",
-					error: "You can't cancel this transaction",
-				});
-				return;
+			if(transaction.rowCount) {
+				if (transaction.rows[0].status !== 1) {
+					failed(res, {
+						code: 400,
+						status: "error",
+						message: "Cancel Transaction Failed",
+						error: "You can't cancel this transaction",
+					});
+					return;
+				}
 			}
 
 			await transactionModel.changeTransactionStatus(id, 0);
@@ -120,7 +129,28 @@ module.exports = {
 	packedTransaction: async (req, res) => {
 		try {
 			const { id } = req.params;
+			const transaction = await transactionModel.findBy("id", id);
+			
+			if(transaction.rowCount) {
+				failed(res, {
+					code: 400,
+					status: "error",
+					message: "Packed Transaction Failed",
+					error: "Transaction not found",
+				});
+				return;
+			}
+			
 			await transactionModel.changeTransactionStatus(id, 2);
+
+			// for get product_id
+			const transactionDetail = await transactionModel.findDetailBy("transaction_id", id);
+			// for get current stock product
+			const product = await productModel.findBy("id", transactionDetail.rows[0].product_id);
+			// current stock - qty
+			const stock = product.rows[0].stock - transactionDetail.rows[0].qty;
+			// reduce stock
+			await productModel.reduceStock(transactionDetail.rows[0].product_id, stock);
 
 			success(res, {
 				code: 200,
@@ -140,6 +170,18 @@ module.exports = {
 	sentTransaction: async (req, res) => {
 		try {
 			const { id } = req.params;
+			const transaction = await transactionModel.findBy("id", id);
+
+			if(transaction.rowCount) {
+				failed(res, {
+					code: 400,
+					status: "error",
+					message: "Sent Transaction Failed",
+					error: "Transaction not found",
+				});
+				return;
+			}
+
 			await transactionModel.changeTransactionStatus(id, 3);
 
 			success(res, {
@@ -160,6 +202,18 @@ module.exports = {
 	completedTransaction: async (req, res) => {
 		try {
 			const { id } = req.params;
+			const transaction = await transactionModel.findBy("id", id);
+
+			if(transaction.rowCount) {
+				failed(res, {
+					code: 400,
+					status: "error",
+					message: "Completed Transaction Failed",
+					error: "Transaction not found",
+				});
+				return;
+			}
+
 			await transactionModel.changeTransactionStatus(id, 4);
 
 			success(res, {
