@@ -11,16 +11,17 @@ const {
 	sentTransaction,
 	completedTransaction,
 	listTransaction,
+	getDetailTransaction,
 } = require("../controllers/transaction.controller");
 
 const router = express.Router();
 
 router
 	.post("/transaction", jwtAuth, onlyBuyer, validation.insert, runValidation, createTransaction)
+	.get("/transaction", jwtAuth, buyerOrSeller, listTransaction)
 	.get("/transaction/admin", jwtAuth, onlyAdmin, listTransactionAdmin)
 	// .get("/transaction/admin", jwtAuth, listTransactionAdmin)
-	.get("/transaction", jwtAuth, buyerOrSeller, listTransaction)
-	.get("/transaction/seller", jwtAuth, onlySeller, listTransaction)
+	.get("/transaction/:id", jwtAuth, buyerOrSeller, getDetailTransaction)
 	.put("/transaction/:id/cancel", jwtAuth, onlyBuyer, cancelTransaction)
 	.put("/transaction/:id/packed", jwtAuth, onlySeller, packedTransaction)
 	.put("/transaction/:id/sent", jwtAuth, onlySeller, sentTransaction)

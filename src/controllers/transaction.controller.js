@@ -326,6 +326,38 @@ module.exports = {
 			});
 		}
 	},
+	getDetailTransaction: async (req, res) => {
+		try {
+			const { id } = req.params;
+			const transaction = await transactionModel.findBy("id", id);
+
+			if (!transaction.rowCount) {
+				failed(res, {
+					code: 400,
+					status: "error",
+					message: "Get Detail Transaction Failed",
+					error: "Transaction not found",
+				});
+				return;
+			}
+
+			const transactionDetail = await transactionModel.detailTransaction(id);
+
+			success(res, {
+				code: 200,
+				status: "success",
+				data: transactionDetail.rows[0],
+				message: "Get Detail Transaction Success",
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
 };
 
 // status

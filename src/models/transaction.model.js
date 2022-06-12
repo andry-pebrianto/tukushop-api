@@ -175,4 +175,13 @@ module.exports = {
 				resolve(result);
 			});
 		}),
+	detailTransaction: (id) =>
+		new Promise((resolve, reject) => {
+			db.query("SELECT transaction.id, transaction.invoice, transaction.payment_method, transaction.status, transaction.total, transaction_detail.price, transaction.date, transaction.address, product.product_name FROM transaction_detail INNER JOIN transaction ON transaction.id=transaction_detail.transaction_id INNER JOIN product ON transaction_detail.product_id=product.id WHERE transaction_detail.transaction_id=$1", [id], (error, result) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(result);
+			});
+		}),
 };
