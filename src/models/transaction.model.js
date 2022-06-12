@@ -100,7 +100,7 @@ module.exports = {
 	selectListTransaction: (paging, sort) =>
 		new Promise((resolve, reject) => {
 			let sql =
-        "SELECT transaction.id, transaction.date, transaction.total, transaction.payment_method, transaction.status, transaction.city, transaction.postal_code, transaction.invoice, transaction.address, transaction.recipient_phone, transaction.recipient_name, transaction_detail.seller_id, transaction_detail.buyer_id FROM transaction INNER JOIN transaction_detail ON transaction.id = transaction_detail.transaction_id ";
+        "SELECT transaction.id, transaction.date, transaction.total, transaction.payment_method, transaction.status, transaction.city, transaction.postal_code, transaction.invoice, transaction.address, transaction.recipient_phone, transaction.recipient_name, transaction_detail.seller_id, transaction_detail.buyer_id, transaction_detail.qty FROM transaction INNER JOIN transaction_detail ON transaction.id = transaction_detail.transaction_id ";
 			if (sort.trim() === "payment") {
 				sql += "ORDER BY transaction.payment_method ";
 			} else if (sort.trim() === "postal") {

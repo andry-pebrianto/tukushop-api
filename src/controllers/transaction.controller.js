@@ -22,6 +22,18 @@ module.exports = {
 			} = req.body;
 
 			const product = await productModel.findBy("id", productId);
+
+			// jika qty pesanan melebihi stock
+			if(parseInt(qty) > product.rows[0].stock) {
+				failed(res, {
+					code: 400,
+					status: "error",
+					message: "Create Transaction Failed",
+					error: "Insufficient stock",
+				});
+				return;
+			}
+
 			const store = await userModel.findStoreBy("id", product.rows[0].store_id);
 			const user = await userModel.findBy("id", store.rows[0].user_id);
 			const transactionData = await transactionModel.insertTransaction({
