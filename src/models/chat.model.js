@@ -3,7 +3,7 @@ const db = require("../config/db");
 const chatModel = {
 	insertChat: (sender, receiver, message) => {
 		return new Promise((resolve, reject) => {
-			db.query("INSERT INTO chat (sender, receiver, message) VALUES ($1, $2, $3, $4)", [sender, receiver, message], (err, result) => {
+			db.query("INSERT INTO chat (sender, receiver, message) VALUES ($1, $2, $3)", [sender, receiver, message], (err, result) => {
 				if (err) {
 					reject(err);
 				} else {
