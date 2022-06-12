@@ -76,6 +76,18 @@ module.exports = {
 				sort
 			);
 
+			for(let i = 0; i < transactions.rows.length; i++) {
+				const sellerData = await userModel.findBy(
+					"id", transactions.rows[i].seller_id,
+				);
+				const buyerData = await userModel.findBy(
+					"id", transactions.rows[i].buyer_id,
+				);
+
+				transactions.rows[i].seller_data = sellerData.rows[0];
+				transactions.rows[i].buyer_data = buyerData.rows[0];
+			}
+
 			success(res, {
 				code: 200,
 				status: "success",
