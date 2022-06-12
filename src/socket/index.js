@@ -16,8 +16,8 @@ module.exports = (io, socket) => {
 			});
 	});
 	socket.on("send-message", (data) => {
-		const { sender_id, receiver_id, type, message} = data;
-		chatModel.insertChat(sender_id, receiver_id, type, message)
+		const { sender_id, receiver_id, message} = data;
+		chatModel.insertChat(sender_id, receiver_id, message)
 			.then(async () => {
 				const listChats = await chatModel.listChat(sender_id, receiver_id);
 				io.to(receiver_id).emit("send-message-response", listChats.rows);
