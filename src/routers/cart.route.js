@@ -2,9 +2,9 @@ const express = require("express");
 
 // import controller
 const {
-  addCart,
-  myCart,
-  deleteCart,
+	addCart,
+	myCart,
+	deleteCart,
 } = require("../controllers/cart.controller");
 
 // import middleware
@@ -18,8 +18,8 @@ const { createValidation } = require("../validations/cart.validation");
 const router = express.Router();
 
 router
-  .post("/cart", jwtAuth, onlyBuyer, createValidation, runValidation, addCart) // new cart buyer only
-  .get("/my-cart", jwtAuth, onlyBuyer, myCart) // get all my cart
-  .delete("/cart/:id", jwtAuth, onlyBuyer, deleteCart); // delete cart buyer only
+	.post("/cart", jwtAuth, onlyBuyer, createValidation, runValidation, addCart) // new cart buyer only
+	.get("/my-cart", jwtAuth, onlyBuyer, myCart) // get all my cart
+	.delete("/cart/:id", jwtAuth, onlyBuyer, deleteCart); // delete cart buyer only
 
 module.exports = router;
