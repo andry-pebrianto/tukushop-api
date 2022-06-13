@@ -63,7 +63,7 @@ module.exports = {
 	selectListProductByCategory: (categoryId, paging, search, sort) =>
 		new Promise((resolve, reject) => {
 			let sql =
-					"SELECT * FROM product WHERE product.is_active=true AND product.category_id=$1 AND LOWER(product.product_name) LIKE '%'||LOWER($2)||'%'";
+					"SELECT product.id, product.store_id, product.category_id, product.product_name, product.price, product.description, product.stock, product.rating, product.date, product.is_active, store.store_name, store.store_phone, store.store_description FROM product INNER JOIN store ON product.store_id=store.id INNER JOIN category ON product.category_id=category.id WHERE product.is_active=true AND product.category_id=$1 AND LOWER(product.product_name) LIKE '%'||LOWER($2)||'%'";
 			if (sort.trim() === "name") {
 				sql += "ORDER BY product.product_name ";
 			} else if (sort.trim() === "stock") {
@@ -84,7 +84,7 @@ module.exports = {
 		}),
 	countProductByCategory: (categoryId, search) =>
 		new Promise((resolve, reject) => {
-			let sql = "SELECT COUNT(*) FROM product WHERE product.is_active=true AND product.category_id=$1 AND LOWER(product.product_name) LIKE '%'||LOWER($2)||'%'";
+			let sql = "SELECT COUNT(*) FROM product INNER JOIN store ON product.store_id=store.id INNER JOIN category ON product.category_id=category.id WHERE product.is_active=true AND product.category_id=$1 AND LOWER(product.product_name) LIKE '%'||LOWER($2)||'%'";
 
 			db.query(sql, [categoryId, search], (error, result) => {
 				if (error) {
