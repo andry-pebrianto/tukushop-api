@@ -30,7 +30,7 @@ module.exports = {
 	selectListProduct: (paging, search, sort) =>
 		new Promise((resolve, reject) => {
 			let sql =
-        "SELECT * FROM product WHERE product.is_active=true AND LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
+        "SELECT product.id, product.store_id, product.category_id, product.product_name, product.price, product.description, product.stock, product.rating, product.date, product.is_active, store.store_name, store.store_phone, store.store_description FROM product INNER JOIN store ON product.store_id=store.id WHERE product.is_active=true AND LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
 			if (sort.trim() === "name") {
 				sql += "ORDER BY product.product_name ";
 			} else if (sort.trim() === "stock") {
@@ -51,7 +51,7 @@ module.exports = {
 		}),
 	countProduct: (search) =>
 		new Promise((resolve, reject) => {
-			let sql = "SELECT COUNT(*) FROM product WHERE product.is_active=true AND LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
+			let sql = "SELECT COUNT(*) FROM product INNER JOIN store ON product.store_id=store.id WHERE product.is_active=true AND LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
 
 			db.query(sql, [search], (error, result) => {
 				if (error) {
@@ -155,7 +155,7 @@ module.exports = {
 		}),
 	selectNewProduct: () =>
 		new Promise((resolve, reject) => {
-			db.query("SELECT * FROM product WHERE product.is_active=true ORDER BY product.date DESC", (error, result) => {
+			db.query("SELECT product.id, product.store_id, product.category_id, product.product_name, product.price, product.description, product.stock, product.rating, product.date, product.is_active, store.store_name, store.store_phone, store.store_description FROM product INNER JOIN store ON product.store_id=store.id WHERE product.is_active=true ORDER BY product.date DESC LIMIT 24", (error, result) => {
 				if (error) {
 					reject(error);
 				}
