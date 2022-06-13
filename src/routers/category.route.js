@@ -32,7 +32,7 @@ const router = express.Router();
 
 router
   .get("/category", jwtAuth, onlyAdmin, allCategory) // get all category admin only
-  .get("/category-active", jwtAuth, buyerOrSeller, allCategoryActive) // get category activ only buyer seller
+  .get("/category-active", allCategoryActive) // get category activ only buyer seller
   .get("/category/:id", jwtAuth, onlyAdmin, detailCategory) // get detail category admin only
   .post(
     "/category",

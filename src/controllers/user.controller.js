@@ -8,7 +8,7 @@ const createPagination = require("../helpers/createPagination");
 module.exports = {
 	getListBuyer: async (req, res) => {
 		try {
-			const { page, limit, search = "", sort="" } = req.query;
+			const { page, limit, search = "", sort = "" } = req.query;
 			const count = await userModel.countBuyer(search);
 			console.log(count.rows);
 			const paging = createPagination(count.rows[0].count, page, limit);
@@ -32,7 +32,7 @@ module.exports = {
 	},
 	getListSeller: async (req, res) => {
 		try {
-			const { page, limit, search = "", sort="" } = req.query;
+			const { page, limit, search = "", sort = "" } = req.query;
 			const count = await userModel.countSeller(search);
 			const paging = createPagination(count.rows[0].count, page, limit);
 			const users = await userModel.selectAllSeller(paging, search, sort);
@@ -70,11 +70,11 @@ module.exports = {
 			}
 
 			// jika user adalah seller
-			if(user.rows[0].level === 2) {
+			if (user.rows[0].level === 2) {
 				console.log("B");
 				user = await userModel.getDetailSeller(id);
-			} 
-			
+			}
+
 			// jika user adalah buyer
 			else {
 				console.log("C");
@@ -204,6 +204,70 @@ module.exports = {
 				status: "success",
 				message: "Edit Profile Success",
 				data: null,
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	getListChatSeller: async (req, res) => {
+		try {
+			const buyers = await userModel.findBy("level", 3);
+
+			for (let i = 0; i < buyers.rows.length; i++) {
+				const checkAlreadyChat = await userModel.listChat(
+					req.APP_DATA.tokenDecoded.id,
+					buyers.rows[i].id
+				);
+
+				if (checkAlreadyChat.rowCount) {
+					buyers.rows[i].already_chat = true;
+				} else {
+					buyers.rows[i].already_chat = false;
+				}
+			}
+
+			success(res, {
+				code: 200,
+				status: "success",
+				message: "Select List Chat Seller Success",
+				data: buyers.rows,
+			});
+		} catch (error) {
+			failed(res, {
+				code: 500,
+				status: "error",
+				message: "Internal Server Error",
+				error: error.message,
+			});
+		}
+	},
+	getListChatBuyer: async (req, res) => {
+		try {
+			const sellers = await userModel.findBy("level", 2);
+
+			for (let i = 0; i < sellers.rows.length; i++) {
+				const checkAlreadyChat = await userModel.listChat(
+					req.APP_DATA.tokenDecoded.id,
+					sellers.rows[i].id
+				);
+
+				if (checkAlreadyChat.rowCount) {
+					sellers.rows[i].already_chat = true;
+				} else {
+					sellers.rows[i].already_chat = false;
+				}
+			}
+
+			success(res, {
+				code: 200,
+				status: "success",
+				message: "Select List Chat Buyer Success",
+				data: sellers.rows,
 			});
 		} catch (error) {
 			failed(res, {
