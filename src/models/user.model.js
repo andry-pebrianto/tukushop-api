@@ -182,7 +182,7 @@ module.exports = {
 	getDetailSeller: (id) =>
 		new Promise((resolve, reject) => {
 			db.query(
-				"SELECT users.id, users.name, users.photo, users.email, store.store_name, store.store_phone, store.store_description FROM users INNER JOIN store ON store.user_id = users.id WHERE users.id=$1",
+				"SELECT users.id, users.name, users.photo, users.email, store.id AS store_id, store.store_name, store.store_phone, store.store_description FROM users INNER JOIN store ON store.user_id = users.id WHERE users.id=$1",
 				[id],
 				(error, result) => {
 					if (error) {
