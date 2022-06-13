@@ -192,4 +192,17 @@ module.exports = {
 				}
 			);
 		}),
+	listChat: (sender, receiver) => {
+		return new Promise((resolve, reject) => {
+			db.query(
+				`SELECT * FROM chat LEFT JOIN users AS userSender ON chat.sender=userSender.id LEFT JOIN users AS userReceiver ON chat.receiver=userReceiver.id WHERE (sender='${sender}' AND receiver='${receiver}') OR (sender='${receiver}' AND receiver='${sender}')`,
+				(err, res) => {
+					if (err) {
+						reject(err);
+					}
+					resolve(res);
+				}
+			);
+		});
+	},
 };
