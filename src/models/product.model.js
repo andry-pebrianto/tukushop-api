@@ -17,7 +17,7 @@ module.exports = {
 	detailProduct: (id) =>
 		new Promise((resolve, reject) => {
 			db.query(
-				"SELECT * FROM product WHERE id=$1 AND product.is_active=true",
+				"SELECT product.id, product.store_id, product.category_id, product.product_name, product.price, product.description, product.stock, product.rating, product.date, product.is_new, product.rating, product.is_active, store.store_name, store.store_phone, store.store_description FROM product INNER JOIN store ON product.store_id=store.id WHERE id=$1 AND product.is_active=true",
 				[id],
 				(error, result) => {
 					if (error) {
