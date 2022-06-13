@@ -9,13 +9,13 @@ const updateValidation = [
   check("categoryName", "category name cannot be empty").not().isEmpty(),
 ];
 const statusValidation = [
-  // isActive
-  check("isActive", "is active cannot be empty").not().isEmpty(),
-  check("isActive", "is active value must be booelean").isBoolean(),
+	// isActive
+	check("isActive", "is active cannot be empty").not().isEmpty(),
+	check("isActive", "is active value must be booelean").isBoolean(),
 ];
 
 module.exports = {
-  createValidation,
-  updateValidation,
-  statusValidation,
+	createValidation,
+	updateValidation,
+	statusValidation,
 };
