@@ -94,11 +94,26 @@ module.exports = {
 				});
 				return;
 			}
+			//return console.log(data.rows[0].productid);
+
+			const combData = await Promise.all(
+				data.rows.map(async (item) => {
+					const productImages = await cartModel.produtImagesData(
+						item.productid
+					);
+					const obj = {
+						dataCart: item,
+						productImages: productImages.rows,
+					};
+					return obj;
+				})
+			);
+			//console.log(combData);
 			success(res, {
 				code: 200,
 				status: "success",
 				message: "success get my cart",
-				data: data.rows,
+				data: combData,
 				paggination: [],
 			});
 		} catch (error) {
