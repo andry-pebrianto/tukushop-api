@@ -39,11 +39,9 @@ const cartModel = {
 				`
       SELECT cart.id AS cartId ,cart.user_id AS cartUserId,cart.product_id AS cartProductId,cart.qty AS cartQty,
       product.id AS productId, product.product_name AS productName, product.price AS productPrice,
-      product_images.id AS productImagesId, product_images.photo AS productImagesPhoto,
       store.id AS storeId, store_name AS storeName
       FROM cart
       INNER JOIN product ON cart.product_id = product.id
-      INNER JOIN product_images ON product_images.product_id = product.id
       INNER JOIN store ON product.store_id = store.id
       WHERE cart.user_id='${userId}'
       `,
@@ -52,6 +50,19 @@ const cartModel = {
 						reject(err);
 					}
 					resolve(res);
+				}
+			);
+		});
+	},
+	produtImagesData: (productId) => {
+		return new Promise((resolve, reject) => {
+			db.query(
+				`SELECT * FROM product_images WHERE product_id='${productId}'`,
+				(err, result) => {
+					if (err) {
+						reject(err);
+					}
+					resolve(result);
 				}
 			);
 		});
