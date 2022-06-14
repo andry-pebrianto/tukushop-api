@@ -38,6 +38,7 @@ app.use(categoryRoute);
 app.use(require("./src/routers/productBrand.route"));
 app.use(require("./src/routers/cart.route"));
 app.use(require("./src/routers/address.route"));
+app.use(require("./src/routers/chat.route"));
 
 const APP_PORT = process.env.PORT || 4000;
 
