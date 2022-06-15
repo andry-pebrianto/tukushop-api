@@ -50,7 +50,7 @@ module.exports = {
 				products.rows = products.rows.filter((product) => {
 					const colorArray = [];
 					product.product_color.forEach((item) => {
-						colorArray.push(item.color_value);
+						colorArray.push(item.color_name);
 					});
 
 					return colorArray.includes(colorFilter);
