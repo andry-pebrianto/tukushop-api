@@ -37,7 +37,7 @@ const chatModel = {
       INNER JOIN users AS userSender ON chat.sender=userSender.id
       INNER JOIN users AS userReceiver ON chat.receiver=userReceiver.id
       WHERE (sender = '${senderId}' AND receiver = '${receiverId}') 
-      OR (sender = '${receiverId}' AND receiver = '${senderId}')`, (err, result) => {
+      OR (sender = '${receiverId}' AND receiver = '${senderId}') ORDER BY chat.date`, (err, result) => {
 				if (err) {
 					reject(err);
 				} else {
