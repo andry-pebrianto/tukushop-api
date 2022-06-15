@@ -10,13 +10,22 @@ const createPagination = require("../helpers/createPagination");
 module.exports = {
 	listProduct: async (req, res) => {
 		try {
-			const { page, limit, search = "", sort = "" } = req.query;
+			const {
+				page,
+				limit,
+				search = "",
+				sort = "",
+				categoryFilter,
+				colorFilter,
+				sizeFilter
+			} = req.query;
 			const count = await productModel.countProduct(search);
 			const paging = createPagination(count.rowCount, page, limit);
-			const products = await productModel.selectListProduct(
+			let products = await productModel.selectListProduct(
 				paging,
 				search,
-				sort
+				sort,
+				categoryFilter
 			);
 
 			// get product_image, product_size, product_color
@@ -34,6 +43,30 @@ module.exports = {
 				products.rows[i].product_images = productImages.rows;
 				products.rows[i].product_sizes = productSizes.rows;
 				products.rows[i].product_color = productColors.rows;
+			}
+
+			// filter color
+			if (colorFilter) {
+				products.rows = products.rows.filter((product) => {
+					const colorArray = [];
+					product.product_color.forEach((item) => {
+						colorArray.push(item.color_value);
+					});
+
+					return colorArray.includes(colorFilter);
+				});
+			}
+
+			// filter size
+			if (sizeFilter) {
+				products.rows = products.rows.filter((product) => {
+					const sizeArray = [];
+					product.product_sizes.forEach((item) => {
+						sizeArray.push(item.size);
+					});
+
+					return sizeArray.includes(parseInt(sizeFilter));
+				});
 			}
 
 			success(res, {
@@ -54,10 +87,13 @@ module.exports = {
 	},
 	listProductByCategory: async (req, res) => {
 		try {
-			const {id: categoryId} = req.params;
+			const { id: categoryId } = req.params;
 
 			const { page, limit, search = "", sort = "" } = req.query;
-			const count = await productModel.countProductByCategory(categoryId, search);
+			const count = await productModel.countProductByCategory(
+				categoryId,
+				search
+			);
 			const paging = createPagination(count.rowCount, page, limit);
 			const products = await productModel.selectListProductByCategory(
 				categoryId,
@@ -313,7 +349,7 @@ module.exports = {
 	},
 	editProduct: async (req, res) => {
 		try {
-			const {id} = req.params;
+			const { id } = req.params;
 			const product = await productModel.detailProduct(id);
 
 			// jika product tidak ditemukan
