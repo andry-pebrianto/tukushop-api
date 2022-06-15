@@ -11,7 +11,7 @@ module.exports = {
 			const { page, limit, search = "", sort = "" } = req.query;
 			const count = await userModel.countBuyer(search);
 			console.log(count.rows);
-			const paging = createPagination(count.rows[0].count, page, limit);
+			const paging = createPagination(count.rowCount, page, limit);
 			const users = await userModel.selectAllBuyer(paging, search, sort);
 
 			success(res, {
@@ -34,7 +34,7 @@ module.exports = {
 		try {
 			const { page, limit, search = "", sort = "" } = req.query;
 			const count = await userModel.countSeller(search);
-			const paging = createPagination(count.rows[0].count, page, limit);
+			const paging = createPagination(count.rowCount, page, limit);
 			const users = await userModel.selectAllSeller(paging, search, sort);
 
 			success(res, {

@@ -12,7 +12,7 @@ module.exports = {
 		try {
 			const { page, limit, search = "", sort = "" } = req.query;
 			const count = await productModel.countProduct(search);
-			const paging = createPagination(count.rows[0].count, page, limit);
+			const paging = createPagination(count.rowCount, page, limit);
 			const products = await productModel.selectListProduct(
 				paging,
 				search,
@@ -58,7 +58,7 @@ module.exports = {
 
 			const { page, limit, search = "", sort = "" } = req.query;
 			const count = await productModel.countProductByCategory(categoryId, search);
-			const paging = createPagination(count.rows[0].count, page, limit);
+			const paging = createPagination(count.rowCount, page, limit);
 			const products = await productModel.selectListProductByCategory(
 				categoryId,
 				paging,
@@ -152,7 +152,7 @@ module.exports = {
 			const store = await userModel.findStoreBy("user_id", id);
 			const storeId = store.rows[0].id;
 			const count = await productModel.countProductById(storeId, search);
-			const paging = createPagination(count.rows[0].count, page, limit);
+			const paging = createPagination(count.rowCount, page, limit);
 			const products = await productModel.selectListProductById(
 				storeId,
 				paging,
