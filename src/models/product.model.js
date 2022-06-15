@@ -27,18 +27,25 @@ module.exports = {
 				}
 			);
 		}),
-	selectListProduct: (paging, search, sort) =>
+	selectListProduct: (paging, search, sort, categoryFilter) =>
 		new Promise((resolve, reject) => {
 			let sql =
-        "SELECT product.id, product.store_id, product.category_id, product.product_name, product.price, product.description, product.stock, product.rating, product.date, product.is_active, store.store_name, store.store_phone, store.store_description FROM product INNER JOIN store ON product.store_id=store.id WHERE product.is_active=true AND LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
+        "SELECT product.id, product.store_id, product.category_id, product.product_name, product.price, product.description, product.stock, product.rating, product.date, product.is_active, store.store_name, store.store_phone, store.store_description, categories.category_name FROM product INNER JOIN store ON product.store_id=store.id INNER JOIN categories ON product.category_id=categories.id WHERE product.is_active=true AND LOWER(product.product_name) LIKE '%'||LOWER($1)||'%'";
+
+			// filter
+			if (categoryFilter) {
+				sql += ` AND LOWER(categories.category_name) = '${categoryFilter.toLowerCase()}'`;
+			}
+
+			// sorting
 			if (sort.trim() === "name") {
-				sql += "ORDER BY product.product_name ";
+				sql += " ORDER BY product.product_name ";
 			} else if (sort.trim() === "stock") {
-				sql += "ORDER BY product.stock ";
+				sql += " ORDER BY product.stock ";
 			} else if (sort.trim() === "price") {
-				sql += "ORDER BY product.price ";
+				sql += " ORDER BY product.price ";
 			} else {
-				sql += "ORDER BY product.date ";
+				sql += " ORDER BY product.date ";
 			}
 			sql += `LIMIT ${paging.limit} OFFSET ${paging.offset}`;
 
