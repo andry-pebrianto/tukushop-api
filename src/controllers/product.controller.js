@@ -314,23 +314,27 @@ module.exports = {
 			}
 
 			// insert product sizes
-			productSizes.map(async (size) => {
-				await productModel.insertProductSizes({
-					id: uuidv4(),
-					productId: productData.rows[0].id,
-					size,
+			if(productSizes) {
+				JSON.parse(productSizes).map(async (size) => {
+					await productModel.insertProductSizes({
+						id: uuidv4(),
+						productId: productData.rows[0].id,
+						size,
+					});
 				});
-			});
+			}
 
 			// insert product colors
-			productColors.map(async (color) => {
-				await productModel.insertProductColors({
-					id: uuidv4(),
-					productId: productData.rows[0].id,
-					colorName: color.colorName,
-					colorValue: color.colorValue,
+			if(productColors) {
+				JSON.parse(productColors).map(async (color) => {
+					await productModel.insertProductColors({
+						id: uuidv4(),
+						productId: productData.rows[0].id,
+						colorName: color.colorName,
+						colorValue: color.colorValue,
+					});
 				});
-			});
+			}
 
 			success(res, {
 				code: 200,
