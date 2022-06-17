@@ -7,7 +7,7 @@ module.exports = {
 	addCart: async (req, res) => {
 		try {
 			const userId = req.APP_DATA.tokenDecoded.id;
-			const { productId, qty } = req.body;
+			const { productId, qty, color, size } = req.body;
 
 			// cek product id is exist ?
 			const productData = await cartModel.getProductDetail(productId);
@@ -59,7 +59,10 @@ module.exports = {
 				userId,
 				productId,
 				qty,
+				color,
+				size,
 			};
+			//return console.log(data);
 			await cartModel.addCartData(data);
 			success(res, {
 				code: 200,
