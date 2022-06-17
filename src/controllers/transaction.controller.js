@@ -19,6 +19,8 @@ module.exports = {
 				recipientName,
 				price,
 				qty,
+				color,
+				size,
 			} = req.body;
 
 			const product = await productModel.findBy("id", productId);
@@ -48,6 +50,8 @@ module.exports = {
 				recipientPhone,
 				recipientName,
 				date: new Date(),
+				color,
+				size,
 			});
 
 			await transactionModel.insertTransactionDetail({
