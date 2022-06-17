@@ -315,11 +315,11 @@ module.exports = {
 
 			// insert product sizes
 			if(productSizes) {
-				JSON.parse(productSizes).map(async (size) => {
+				JSON.parse(productSizes).map(async (item) => {
 					await productModel.insertProductSizes({
 						id: uuidv4(),
 						productId: productData.rows[0].id,
-						size,
+						size: item.size,
 					});
 				});
 			}
