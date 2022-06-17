@@ -5,7 +5,7 @@ const chatModel = {
 	insertChat: (sender, receiver, message) => {
 		const id = uuidv4();
 		return new Promise((resolve, reject) => {
-			db.query("INSERT INTO chat (id, sender, receiver, message) VALUES ($1, $2, $3, $4)", [id, sender, receiver, message], (err, result) => {
+			db.query("INSERT INTO chat (id, sender, receiver, message) VALUES ($1, $2, $3, $4, $5)", [id, sender, receiver, message, new Date()], (err, result) => {
 				if (err) {
 					reject(err);
 				} else {
