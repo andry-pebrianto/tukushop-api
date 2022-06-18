@@ -231,11 +231,15 @@ module.exports = {
 				}
 			}
 
+			const buyersFilter = buyers.rows.filter((item) => {
+				return item.already_chat;
+			});
+
 			success(res, {
 				code: 200,
 				status: "success",
 				message: "Select List Chat Seller Success",
-				data: buyers.rows,
+				data: buyersFilter,
 			});
 		} catch (error) {
 			failed(res, {
@@ -263,11 +267,15 @@ module.exports = {
 				}
 			}
 
+			const sellersFilter = sellers.rows.filter((item) => {
+				return item.already_chat;
+			});
+
 			success(res, {
 				code: 200,
 				status: "success",
 				message: "Select List Chat Buyer Success",
-				data: sellers.rows,
+				data: sellersFilter,
 			});
 		} catch (error) {
 			failed(res, {
