@@ -192,6 +192,29 @@ module.exports = {
 				}
 			);
 		}),
+	listChatSelector: (level) =>
+		new Promise((resolve, reject) => {
+			let sql = "SELECT users.id, users.email, users.level, users.is_verified, users.token, users.photo, users.name, store.store_name, store.store_phone, store.store_description FROM users";
+
+			if(level === 2) {
+				sql += " INNER JOIN store ON users.id=store.user_id WHERE level=$1";
+			}
+
+			if(level === 3) {
+				sql += " INNER JOIN profile ON users.id=profile.user_id WHERE level=$1";
+			}
+
+			db.query(
+				sql,
+				[level],
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				}
+			);
+		}),
 	listChat: (sender, receiver) => {
 		return new Promise((resolve, reject) => {
 			db.query(
