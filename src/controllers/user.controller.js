@@ -216,7 +216,7 @@ module.exports = {
 	},
 	getListChatSeller: async (req, res) => {
 		try {
-			const buyers = await userModel.findBy("level", 3);
+			const buyers = await userModel.listChatSelector(3);
 
 			for (let i = 0; i < buyers.rows.length; i++) {
 				const checkAlreadyChat = await userModel.listChat(
@@ -252,7 +252,7 @@ module.exports = {
 	},
 	getListChatBuyer: async (req, res) => {
 		try {
-			const sellers = await userModel.findBy("level", 2);
+			const sellers = await userModel.listChatSelector(2);
 
 			for (let i = 0; i < sellers.rows.length; i++) {
 				const checkAlreadyChat = await userModel.listChat(
