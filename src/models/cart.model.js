@@ -17,12 +17,12 @@ const cartModel = {
 		});
 	},
 	addCartData: (data) => {
-		const { id, userId, productId, qty } = data;
+		const { id, userId, productId, qty, color, size } = data;
 		return new Promise((resolve, reject) => {
 			db.query(
 				`
-      INSERT INTO cart(id,user_id,product_id,qty)
-      VALUES('${id}','${userId}','${productId}',${qty})
+      INSERT INTO cart(id,user_id,product_id,qty,color,size)
+      VALUES('${id}','${userId}','${productId}',${qty}, '${color}', '${size}')
       `,
 				(err, res) => {
 					if (err) {
@@ -37,7 +37,7 @@ const cartModel = {
 		return new Promise((resolve, reject) => {
 			db.query(
 				`
-      SELECT cart.id AS cartId ,cart.user_id AS cartUserId,cart.product_id AS cartProductId,cart.qty AS cartQty,
+      SELECT cart.id AS cartId ,cart.user_id AS cartUserId,cart.product_id AS cartProductId,cart.qty AS cartQty,cart.color AS cartColor,cart.size AS cartSize,
       product.id AS productId, product.product_name AS productName, product.price AS productPrice,
       store.id AS storeId, store_name AS storeName
       FROM cart
