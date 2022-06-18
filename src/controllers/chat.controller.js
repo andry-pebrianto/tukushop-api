@@ -5,12 +5,12 @@ const { success, failed } = require("../helpers/response");
 module.exports = {
 	insertInitialChat: async (req, res) => {
 		try {
-			const {senderId, receiverId} = req.body;
+			const {senderId, receiverId, message} = req.body;
 
 			const store = await userModel.findStoreBy("id", receiverId);
 			const user = await userModel.findBy("id", store.rows[0].user_id);
 
-			await chatModel.insertChat(senderId, user.rows[0].id, "Halo, selamat siang.");
+			await chatModel.insertChat(senderId, user.rows[0].id, message);
 
 			success(res, {
 				code: 200,
