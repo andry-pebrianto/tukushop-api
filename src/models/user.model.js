@@ -201,7 +201,7 @@ module.exports = {
 			}
 
 			if(level === 3) {
-				sql += " store.phone, store.gender, store.birth FROM users INNER JOIN profile ON users.id=profile.user_id WHERE level=$1";
+				sql += " profile.phone, profile.gender, profile.birth FROM users INNER JOIN profile ON users.id=profile.user_id WHERE level=$1";
 			}
 
 			db.query(
