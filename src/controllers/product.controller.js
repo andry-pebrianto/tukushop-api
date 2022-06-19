@@ -20,7 +20,8 @@ module.exports = {
 				sizeFilter
 			} = req.query;
 			const count = await productModel.countProduct(search);
-			const paging = createPagination(count.rowCount, page, limit);
+			const countNumber = count.rows.length ? count.rows[0].count : 0;
+			const paging = createPagination(countNumber, page, limit);
 			let products = await productModel.selectListProduct(
 				paging,
 				search,
@@ -94,7 +95,8 @@ module.exports = {
 				categoryId,
 				search
 			);
-			const paging = createPagination(count.rowCount, page, limit);
+			const countNumber = count.rows.length ? count.rows[0].count : 0;
+			const paging = createPagination(countNumber, page, limit);
 			const products = await productModel.selectListProductByCategory(
 				categoryId,
 				paging,
@@ -188,7 +190,8 @@ module.exports = {
 			const store = await userModel.findStoreBy("user_id", id);
 			const storeId = store.rows[0].id;
 			const count = await productModel.countProductById(storeId, search);
-			const paging = createPagination(count.rowCount, page, limit);
+			const countNumber = count.rows.length ? count.rows[0].count : 0;
+			const paging = createPagination(countNumber, page, limit);
 			const products = await productModel.selectListProductById(
 				storeId,
 				paging,
