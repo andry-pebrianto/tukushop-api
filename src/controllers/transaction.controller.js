@@ -86,7 +86,8 @@ module.exports = {
 		try {
 			const { page, limit, sort = "" } = req.query;
 			const count = await transactionModel.countTransaction();
-			const paging = createPagination(count.rowCount, page, limit);
+			const countNumber = count.rows.length ? count.rows[0].count : 0;
+			const paging = createPagination(countNumber, page, limit);
 			const transactions = await transactionModel.selectListTransaction(
 				paging,
 				sort
@@ -288,7 +289,8 @@ module.exports = {
 				const count = await transactionModel.countGetListSellerTransaction(
 					req.APP_DATA.tokenDecoded.id
 				);
-				const paging = createPagination(count.rowCount, page, limit);
+				const countNumber = count.rows.length ? count.rows[0].count : 0;
+				const paging = createPagination(countNumber, page, limit);
 				const transactions = await transactionModel.getListSellerTransaction(
 					req.APP_DATA.tokenDecoded.id,
 					paging
@@ -308,7 +310,8 @@ module.exports = {
 				const count = await transactionModel.countGetListBuyerTransaction(
 					req.APP_DATA.tokenDecoded.id
 				);
-				const paging = createPagination(count.rowCount, page, limit);
+				const countNumber = count.rows.length ? count.rows[0].count : 0;
+				const paging = createPagination(countNumber, page, limit);
 				const transactions = await transactionModel.getListBuyerTransaction(
 					req.APP_DATA.tokenDecoded.id,
 					paging
