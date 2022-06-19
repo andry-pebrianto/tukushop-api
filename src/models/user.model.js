@@ -194,14 +194,14 @@ module.exports = {
 		}),
 	listChatSelector: (level) =>
 		new Promise((resolve, reject) => {
-			let sql = "SELECT users.id, users.email, users.level, users.is_verified, users.token, users.photo, users.name, store.store_name, store.store_phone, store.store_description FROM users";
+			let sql = "SELECT users.id, users.email, users.level, users.is_verified, users.token, users.photo, users.name,";
 
 			if(level === 2) {
-				sql += " INNER JOIN store ON users.id=store.user_id WHERE level=$1";
+				sql += " store.store_name, store.store_phone, store.store_description FROM users INNER JOIN store ON users.id=store.user_id WHERE level=$1";
 			}
 
 			if(level === 3) {
-				sql += " INNER JOIN profile ON users.id=profile.user_id WHERE level=$1";
+				sql += " store.phone, store.gender, store.birth FROM users INNER JOIN profile ON users.id=profile.user_id WHERE level=$1";
 			}
 
 			db.query(
