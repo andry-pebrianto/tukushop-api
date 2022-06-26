@@ -9,7 +9,7 @@ const insert = [
 	check("price", "Price only can contains number").isNumeric(),
 	check("price", "Price too high").isLength({ max: 13 }),
 	// description
-	check("description", "Description maximum length is 250 characters").isLength({ max: 250 }),
+	check("description", "Description maximum length is 1005 characters").isLength({ max: 1005 }),
 	// stock
 	check("stock", "Stock required").not().isEmpty(),
 	check("stock", "Stock only can contains number").isNumeric(),
