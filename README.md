@@ -6,6 +6,19 @@
   <a href="https://tukushop.herokuapp.com/">View API Demo</a>
   ·
   <a href="https://github.com/HyperCarry-Team/TukuShop-app-backend/issues">Report Bug</a>
+  <br />
+  <p align="center">
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-frontend/react?color=32C33B"></a>
+  </p>
 </p>
 
 <!-- ABOUT THE PROJECT -->
