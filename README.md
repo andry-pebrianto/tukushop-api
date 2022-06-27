@@ -17,7 +17,6 @@
   <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-backend/multer?color=32C33B"></a>
   <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-backend/socket.io?color=32C33B"></a>
   <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-backend/ejs?color=32C33B"></a>
-  <a href="https://reactjs.org/"><img src="https://img.shields.io/github/package-json/dependency-version/HyperCarry-Team/TukuShop-app-backend/express-validator?color=32C33B"></a>
   </p>
 </p>
 
