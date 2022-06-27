@@ -39,7 +39,7 @@ This is a Restful API repository for TukuShop. This Restful API is built using E
 
 ### Installation
 
-- Clone this project with `git clone https://github.com/HyperCarry-Team/TukuShop-app-backend.git
+- Clone this project with `git clone https://github.com/HyperCarry-Team/TukuShop-app-backend.git`
 - Install package required with `npm install`
 - Setting .env
 
