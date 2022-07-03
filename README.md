@@ -75,7 +75,7 @@ DRIVE_REFRESH_TOKEN=
 <!-- RELATED PROJECT -->
 ## Related Project
 
-- [TukuShop Client](https://github.com/HyperCarry-Team/TukuShop-app-frontend)
+- [TukuShop Client](https://github.com/andry-pebrianto/tukushop-client)
 - [TukuShop Demo](https://tukushop-app.vercel.app/)
 
 ## Our Team
